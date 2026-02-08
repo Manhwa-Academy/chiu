@@ -16,7 +16,7 @@ public class SendEmailSMTP {
     public static boolean sendOTP(String emailTo, String otp) {
 
         String username = "vuliztva1@gmail.com";
-        String password = "efdv dhbh njts oztg";
+        String password = ""; //efdv dhbh njts oztg
 
         Properties prop = new Properties();
         prop.put("mail.smtp.host", "smtp.gmail.com");
@@ -45,7 +45,7 @@ public class SendEmailSMTP {
                     + "<h1 style='background:#0b5394;color:white;display:inline-block;padding:10px 20px;border-radius:8px'>"
                     + otp + "</h1>"
                     + "<br><br>"
-                    + "<img src='https://tenor.googleapis.com/v2/media?id=18175356203862006295&format=optimizedgif&client_key=tenor_web&appversion=browser-r260203-1&access_token=ya29.A0AUMWg_JAb3zq1iQODjNWK9esrshNYAEK3cRRGnD1s7qwU5NAXF2WvmGHEj_HRQJV4FCn-sX7R9hFgV0UuLYRyx71_ZnLmcbRNYhGMwFH8w0IOW2SSsx5l-68haEitpl8dxXvic1FAFmzIW1DgLXoDG7oN_NFmbEU3nuQEkGIyYrTcyDrl0dtuSjIjV8Wexi4ReUj-e_3yhnD2753Qt480-Oqn2yjINFPvgBlsILHCdjlBQ8QBOX_K9oU3-XTxUAJWzqU0NU9eZpXQ2w2LzdZYeG1DqZsaCgYKATASARASFQHGX2Mi5rR6nU6NRQGphUNPA1q34w0291&key=AIzaSyC-P6_qz3FzCoXGLk6tgitZo4jEJ5mLzD8' width='200'/>"
+                    // + "<img src='https://tenor.googleapis.com/v2/media?id=18175356203862006295&format=optimizedgif&client_key=tenor_web&appversion=browser-r260203-1&access_token=ya29.A0AUMWg_JAb3zq1iQODjNWK9esrshNYAEK3cRRGnD1s7qwU5NAXF2WvmGHEj_HRQJV4FCn-sX7R9hFgV0UuLYRyx71_ZnLmcbRNYhGMwFH8w0IOW2SSsx5l-68haEitpl8dxXvic1FAFmzIW1DgLXoDG7oN_NFmbEU3nuQEkGIyYrTcyDrl0dtuSjIjV8Wexi4ReUj-e_3yhnD2753Qt480-Oqn2yjINFPvgBlsILHCdjlBQ8QBOX_K9oU3-XTxUAJWzqU0NU9eZpXQ2w2LzdZYeG1DqZsaCgYKATASARASFQHGX2Mi5rR6nU6NRQGphUNPA1q34w0291&key=AIzaSyC-P6_qz3FzCoXGLk6tgitZo4jEJ5mLzD8' width='200'/>"
                     + "<p style='color:gray'>Warehouse Management System</p>"
                     + "</div>";
 
