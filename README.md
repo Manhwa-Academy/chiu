@@ -78,7 +78,7 @@ avatar/                        # Lưu ảnh đại diện người dùng lúc ch
 
 ### 1. Clone source
 ```bash
-git clone https://github.com/Manhwa-Academy/pt-ungdung-didong.git
+git clone https://github.com/Manhwa-Academy/chiu.git
 cd pt-ungdung-didong
 ````
 
@@ -165,5 +165,6 @@ Nếu bạn có ý tưởng cải tiến, giao diện mới, hoặc muốn tham 
 Manhwa-Academy
 
 ---
+
 
 > Đây là project học tập do nhóm 4 thực hiện.
