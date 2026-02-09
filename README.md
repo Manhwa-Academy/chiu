@@ -79,7 +79,6 @@ avatar/                        # Lưu ảnh đại diện người dùng lúc ch
 ### 1. Clone source
 ```bash
 git clone https://github.com/Manhwa-Academy/chiu.git
-cd pt-ungdung-didong
 ````
 
 ---
@@ -121,7 +120,43 @@ Hoặc chạy trực tiếp class:
 ```
 GUI.Log_In
 ```
+#### Sửa lỗi JAVA_HOME not found (Windows)
 
+
+- Khi chạy mvnw.cmd báo:
+
+- **JAVA_HOME not found in your environment**
+- Cách xử lý nhanh
+
+- Mở thư mục:
+```bash
+C:\Program Files\Java\
+
+Tìm thư mục JDK (ví dụ jdk-21 hoặc jdk-21.0.10).
+
+Mở Environment Variables
+→ System variables → New
+
+Variable name: JAVA_HOME
+Variable value: C:\Program Files\Java\jdk-21.0.10
+
+Sửa biến Path → New
+
+%JAVA_HOME%\bin
+
+Mở CMD mới và kiểm tra:
+
+java -version
+echo %JAVA_HOME%
+
+Chạy lại:
+
+mvnw.cmd -U clean compile
+
+Sau đó chạy form đăng nhập
+
+mvnw.cmd exec:java -Dexec.mainClass=GUI.Log_In
+```
 ---
 
 ## 🧩 Thông tin thêm
