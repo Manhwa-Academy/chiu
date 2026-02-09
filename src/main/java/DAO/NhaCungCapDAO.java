@@ -56,21 +56,21 @@ public class NhaCungCapDAO implements DAOinterface<NhaCungCapDTO>{
         return result;
     }
 
-    @Override
-    public int delete(String t) {
-        int result = 0 ;
-        try {
-            Connection con = (Connection) JDBCUtil.getConnection();
-            String sql = "UPDATE nhacungcap SET trangthai = 0 WHERE manhacungcap = ?";
-            PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
-            pst.setString(1, t);
-            result = pst.executeUpdate();
-            JDBCUtil.closeConnection(con);
-        } catch (SQLException ex) {
-            Logger.getLogger(NhaCungCapDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return result;
+   @Override
+public int delete(String t) {
+    int result = 0;
+    try {
+        Connection con = JDBCUtil.getConnection();
+        String sql = "DELETE FROM nhacungcap WHERE manhacungcap = ?";
+        PreparedStatement pst = con.prepareStatement(sql);
+        pst.setString(1, t);
+        result = pst.executeUpdate();
+        JDBCUtil.closeConnection(con);
+    } catch (SQLException ex) {
+        Logger.getLogger(NhaCungCapDAO.class.getName()).log(Level.SEVERE, null, ex);
     }
+    return result;
+}
 
     @Override
     public ArrayList<NhaCungCapDTO> selectAll() {

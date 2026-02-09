@@ -65,11 +65,11 @@ public final class NhaCungCap extends JPanel implements ActionListener, ItemList
     public ArrayList<NhaCungCapDTO> listncc = nccBUS.getAll();
 
     private void initComponent() {
-        //Set model table
+        // Set model table
         tableNhaCungCap = new JTable();
         scrollTableSanPham = new JScrollPane();
         tblModel = new DefaultTableModel();
-        String[] header = new String[]{"Mã NCC", "Tên nhà cung cấp", "Địa chỉ", "Email", "Số điện thoại"};
+        String[] header = new String[] { "Mã NCC", "Tên nhà cung cấp", "Địa chỉ", "Email", "Số điện thoại" };
         tblModel.setColumnIdentifiers(header);
         tableNhaCungCap.setModel(tblModel);
         tableNhaCungCap.setFocusable(false);
@@ -86,7 +86,8 @@ public final class NhaCungCap extends JPanel implements ActionListener, ItemList
         this.setLayout(new BorderLayout(0, 0));
         this.setOpaque(true);
 
-        // pnlBorder1, pnlBorder2, pnlBorder3, pnlBorder4 chỉ để thêm contentCenter ở giữa mà contentCenter không bị dính sát vào các thành phần khác
+        // pnlBorder1, pnlBorder2, pnlBorder3, pnlBorder4 chỉ để thêm contentCenter ở
+        // giữa mà contentCenter không bị dính sát vào các thành phần khác
         pnlBorder1 = new JPanel();
         pnlBorder1.setPreferredSize(new Dimension(0, 10));
         pnlBorder1.setBackground(BackgroundColor);
@@ -113,20 +114,22 @@ public final class NhaCungCap extends JPanel implements ActionListener, ItemList
         contentCenter.setLayout(new BorderLayout(10, 10));
         this.add(contentCenter, BorderLayout.CENTER);
 
-        // functionBar là thanh bên trên chứa các nút chức năng như thêm xóa sửa, và tìm kiếm
+        // functionBar là thanh bên trên chứa các nút chức năng như thêm xóa sửa, và tìm
+        // kiếm
         functionBar = new PanelBorderRadius();
         functionBar.setPreferredSize(new Dimension(0, 100));
         functionBar.setLayout(new GridLayout(1, 2, 50, 0));
         functionBar.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        String[] action = {"create", "update", "delete", "detail", "import", "export"};
+        String[] action = { "create", "update", "delete", "detail", "import", "export" };
         mainFunction = new MainFunction(m.user.getManhomquyen(), "nhacungcap", action);
         for (String ac : action) {
             mainFunction.btn.get(ac).addActionListener(this);
         }
         functionBar.add(mainFunction);
 
-        search = new IntegratedSearch(new String[]{"Tất cả", "Mã nhà cung cấp", "Tên nhà cung cấp", "Địa chỉ", "Email", "Số điện thoại"});
+        search = new IntegratedSearch(
+                new String[] { "Tất cả", "Mã nhà cung cấp", "Tên nhà cung cấp", "Địa chỉ", "Email", "Số điện thoại" });
         search.cbxChoose.addItemListener(this);
         search.txtSearchForm.addKeyListener(new KeyAdapter() {
             @Override
@@ -145,7 +148,7 @@ public final class NhaCungCap extends JPanel implements ActionListener, ItemList
         main = new PanelBorderRadius();
         BoxLayout boxly = new BoxLayout(main, BoxLayout.Y_AXIS);
         main.setLayout(boxly);
-//        main.setBorder(new EmptyBorder(20, 20, 20, 20));
+        // main.setBorder(new EmptyBorder(20, 20, 20, 20));
         contentCenter.add(main, BorderLayout.CENTER);
         main.add(scrollTableSanPham);
     }
@@ -160,8 +163,8 @@ public final class NhaCungCap extends JPanel implements ActionListener, ItemList
     public void loadDataTable(ArrayList<NhaCungCapDTO> result) {
         tblModel.setRowCount(0);
         for (NhaCungCapDTO ncc : result) {
-            tblModel.addRow(new Object[]{
-                ncc.getMancc(), ncc.getTenncc(), ncc.getDiachi(), ncc.getEmail(), ncc.getSdt()
+            tblModel.addRow(new Object[] {
+                    ncc.getMancc(), ncc.getTenncc(), ncc.getDiachi(), ncc.getEmail(), ncc.getSdt()
             });
         }
     }
@@ -243,21 +246,38 @@ public final class NhaCungCap extends JPanel implements ActionListener, ItemList
         } else if (e.getSource() == mainFunction.btn.get("update")) {
             int index = getRowSelected();
             if (index != -1) {
-               new NhaCungCapDialog(this, owner, "Chỉnh sửa nhà cung cấp", true, "update", listncc.get(index));
+                new NhaCungCapDialog(this, owner, "Chỉnh sửa nhà cung cấp", true, "update", listncc.get(index));
 
             }
         } else if (e.getSource() == mainFunction.btn.get("delete")) {
-            int index = getRowSelected();
-            if (index != -1) {
-                int input = JOptionPane.showConfirmDialog(null,
-                        "Bạn có chắc chắn muốn xóa nhà cung cấp!", "Xóa nhà cung cấp",
-                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
-                if (input == 0) {
-                    nccBUS.delete(listncc.get(index), index);
-                    loadDataTable(listncc);
-                }
+
+            int[] selectedRows = tableNhaCungCap.getSelectedRows();
+
+            if (selectedRows.length == 0) {
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn ít nhất một nhà cung cấp");
+                return;
             }
-        } else if (e.getSource() == mainFunction.btn.get("detail")) {
+
+            int input = JOptionPane.showConfirmDialog(
+                    this,
+                    "Bạn có chắc chắn muốn xóa " + selectedRows.length + " nhà cung cấp?",
+                    "Xóa nhà cung cấp",
+                    JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.WARNING_MESSAGE);
+
+            if (input == JOptionPane.OK_OPTION) {
+                // Xóa từ dưới lên để tránh lỗi lệch index
+                for (int i = selectedRows.length - 1; i >= 0; i--) {
+                    int row = selectedRows[i];
+                    nccBUS.delete(listncc.get(row), row);
+                }
+                loadDataTable(listncc);
+            }
+        }
+
+        else if (e.getSource() == mainFunction.btn.get("detail"))
+
+        {
             int index = getRowSelected();
             if (index != -1) {
                 new NhaCungCapDialog(this, owner, "Chi tiết nhà cung cấp", true, "view", listncc.get(index));
