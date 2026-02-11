@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.1.3
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th2 09, 2026 lúc 02:57 AM
--- Phiên bản máy phục vụ: 10.4.32-MariaDB
--- Phiên bản PHP: 8.2.12
+-- Thời gian đã tạo: Th2 11, 2026 lúc 03:17 PM
+-- Phiên bản máy phục vụ: 10.4.24-MariaDB
+-- Phiên bản PHP: 7.4.29
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -31,7 +31,7 @@ CREATE TABLE `category` (
   `macategory` int(11) NOT NULL,
   `tencategory` varchar(255) NOT NULL,
   `trangthai` tinyint(1) DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Đang đổ dữ liệu cho bảng `category`
@@ -54,7 +54,7 @@ CREATE TABLE `character_sp` (
   `macharacter` int(11) NOT NULL,
   `tencharacter` varchar(255) NOT NULL,
   `trangthai` tinyint(1) DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Đang đổ dữ liệu cho bảng `character_sp`
@@ -78,7 +78,7 @@ CREATE TABLE `ctkiemke` (
   `soluong` int(11) NOT NULL,
   `chenhlech` int(11) NOT NULL,
   `ghichu` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -92,7 +92,16 @@ CREATE TABLE `ctphieunhap` (
   `soluong` int(11) NOT NULL DEFAULT 0,
   `dongia` int(11) NOT NULL DEFAULT 0,
   `hinhthucnhap` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Đang đổ dữ liệu cho bảng `ctphieunhap`
+--
+
+INSERT INTO `ctphieunhap` (`maphieunhap`, `maphienbansp`, `soluong`, `dongia`, `hinhthucnhap`) VALUES
+(1, 7, 11, 11111, 0),
+(2, 7, 111, 11111, 0),
+(3, 7, 1, 11111, 0);
 
 -- --------------------------------------------------------
 
@@ -105,7 +114,15 @@ CREATE TABLE `ctphieuxuat` (
   `maphienbansp` int(11) NOT NULL DEFAULT 0,
   `soluong` int(11) NOT NULL DEFAULT 0,
   `dongia` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Đang đổ dữ liệu cho bảng `ctphieuxuat`
+--
+
+INSERT INTO `ctphieuxuat` (`maphieuxuat`, `maphienbansp`, `soluong`, `dongia`) VALUES
+(1, 7, 1, 1111111),
+(2, 7, 1, 1111);
 
 -- --------------------------------------------------------
 
@@ -117,7 +134,7 @@ CREATE TABLE `ctquyen` (
   `manhomquyen` int(11) NOT NULL,
   `machucnang` varchar(50) NOT NULL,
   `hanhdong` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Đang đổ dữ liệu cho bảng `ctquyen`
@@ -227,7 +244,14 @@ CREATE TABLE `ctsanpham` (
   `maphieunhap` int(11) NOT NULL,
   `maphieuxuat` int(11) DEFAULT NULL,
   `tinhtrang` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Đang đổ dữ liệu cho bảng `ctsanpham`
+--
+
+INSERT INTO `ctsanpham` (`maimei`, `maphienbansp`, `maphieunhap`, `maphieuxuat`, `tinhtrang`) VALUES
+('111111111111111', 7, 3, 2, 0);
 
 -- --------------------------------------------------------
 
@@ -239,7 +263,7 @@ CREATE TABLE `dacdiemsanpham` (
   `madacdiem` int(11) NOT NULL,
   `tendacdiem` varchar(255) NOT NULL,
   `trangthai` tinyint(4) DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -251,7 +275,7 @@ CREATE TABLE `danhmucchucnang` (
   `machucnang` varchar(50) NOT NULL,
   `tenchucnang` varchar(255) NOT NULL,
   `trangthai` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Đang đổ dữ liệu cho bảng `danhmucchucnang`
@@ -283,7 +307,14 @@ CREATE TABLE `khachhang` (
   `sdt` varchar(255) NOT NULL,
   `trangthai` int(11) NOT NULL,
   `ngaythamgia` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Đang đổ dữ liệu cho bảng `khachhang`
+--
+
+INSERT INTO `khachhang` (`makh`, `tenkhachhang`, `diachi`, `sdt`, `trangthai`, `ngaythamgia`) VALUES
+(1, 'a', 'a', '111111111', 1, '2026-02-11 20:24:54');
 
 -- --------------------------------------------------------
 
@@ -296,7 +327,7 @@ CREATE TABLE `khuvuckho` (
   `tenkhuvuc` varchar(255) NOT NULL,
   `ghichu` varchar(255) NOT NULL,
   `trangthai` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Đang đổ dữ liệu cho bảng `khuvuckho`
@@ -320,7 +351,14 @@ CREATE TABLE `nhacungcap` (
   `email` varchar(255) NOT NULL,
   `sdt` varchar(255) NOT NULL,
   `trangthai` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Đang đổ dữ liệu cho bảng `nhacungcap`
+--
+
+INSERT INTO `nhacungcap` (`manhacungcap`, `tennhacungcap`, `diachi`, `email`, `sdt`, `trangthai`) VALUES
+(2, 'Công ty Vivo Việt Nam', 'Số 79 đường số 6, Hưng Phước 4, Phú Mỹ Hưng, quận 7, TPHCM', 'contact@paviet.vn', '19009477', 1);
 
 -- --------------------------------------------------------
 
@@ -337,7 +375,7 @@ CREATE TABLE `nhanvien` (
   `email` varchar(255) NOT NULL,
   `trangthai` int(11) NOT NULL,
   `avatar` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Đang đổ dữ liệu cho bảng `nhanvien`
@@ -358,7 +396,7 @@ CREATE TABLE `nhomquyen` (
   `manhomquyen` int(11) NOT NULL,
   `tennhomquyen` varchar(255) NOT NULL,
   `trangthai` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Đang đổ dữ liệu cho bảng `nhomquyen`
@@ -383,7 +421,15 @@ CREATE TABLE `phienbansanpham` (
   `giaxuat` int(11) NOT NULL,
   `soluongton` int(11) NOT NULL DEFAULT 0,
   `trangthai` tinyint(4) DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Đang đổ dữ liệu cho bảng `phienbansanpham`
+--
+
+INSERT INTO `phienbansanpham` (`maphienbansp`, `masp`, `tenphienban`, `gianhap`, `giaxuat`, `soluongton`, `trangthai`) VALUES
+(7, 4, 'a - ac', 11111, 1111, 123, 1),
+(8, 4, 'b - acc', 111, 1111, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -397,7 +443,7 @@ CREATE TABLE `phieubaohanh` (
   `lydo` varchar(50) NOT NULL,
   `thoigian` datetime NOT NULL DEFAULT curdate(),
   `thoigiantra` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -411,7 +457,7 @@ CREATE TABLE `phieudoi` (
   `lydo` varchar(255) NOT NULL,
   `thoigian` date DEFAULT curdate(),
   `nguoitao` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -423,7 +469,7 @@ CREATE TABLE `phieukiemke` (
   `maphieu` int(11) NOT NULL,
   `thoigian` date NOT NULL DEFAULT curdate(),
   `nguoitaophieukiemke` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -438,7 +484,16 @@ CREATE TABLE `phieunhap` (
   `nguoitao` int(11) NOT NULL,
   `tongtien` bigint(20) NOT NULL DEFAULT 0,
   `trangthai` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Đang đổ dữ liệu cho bảng `phieunhap`
+--
+
+INSERT INTO `phieunhap` (`maphieunhap`, `thoigian`, `manhacungcap`, `nguoitao`, `tongtien`, `trangthai`) VALUES
+(1, '2026-02-11 20:22:21', 2, 4, 122221, 1),
+(2, '2026-02-11 20:33:43', 2, 4, 1233321, 1),
+(3, '2026-02-11 14:09:34', 2, 4, 11111, 1);
 
 -- --------------------------------------------------------
 
@@ -452,7 +507,7 @@ CREATE TABLE `phieutra` (
   `lydo` varchar(255) NOT NULL,
   `thoigian` date DEFAULT curdate(),
   `nguoitao` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -467,7 +522,15 @@ CREATE TABLE `phieuxuat` (
   `nguoitaophieuxuat` int(11) DEFAULT NULL,
   `makh` int(11) DEFAULT NULL,
   `trangthai` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Đang đổ dữ liệu cho bảng `phieuxuat`
+--
+
+INSERT INTO `phieuxuat` (`maphieuxuat`, `thoigian`, `tongtien`, `nguoitaophieuxuat`, `makh`, `trangthai`) VALUES
+(1, '2026-02-11 20:39:06', 1111111, 4, 1, 1),
+(2, '2026-02-11 21:09:59', 1111, 4, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -488,8 +551,16 @@ CREATE TABLE `sanpham` (
   `khuvuckho` int(11) NOT NULL,
   `trangthai` tinyint(4) DEFAULT 1,
   `ngaytao` timestamp NOT NULL DEFAULT current_timestamp(),
-  `loaiSanPham` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `loaiSanPham` varchar(255) DEFAULT NULL,
+  `hinhanh` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Đang đổ dữ liệu cho bảng `sanpham`
+--
+
+INSERT INTO `sanpham` (`masp`, `tensp`, `soluongton`, `thuonghieu`, `series`, `nhanvat`, `tyle`, `chatlieu`, `xuatxu`, `khuvuckho`, `trangthai`, `ngaytao`, `loaiSanPham`, `hinhanh`) VALUES
+(4, 'magicc', 112, 1, 'Blue Archive', 'Hatsune Miku', 'bc', 'acc', 1, 1, 1, '2026-02-10 17:00:00', 'Plushie', '885tải xuống.jpg');
 
 -- --------------------------------------------------------
 
@@ -501,7 +572,7 @@ CREATE TABLE `series` (
   `maSeries` int(11) NOT NULL,
   `tenSeries` varchar(255) NOT NULL,
   `trangthai` tinyint(4) DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Đang đổ dữ liệu cho bảng `series`
@@ -527,7 +598,7 @@ CREATE TABLE `taikhoan` (
   `tendangnhap` varchar(50) NOT NULL DEFAULT '',
   `trangthai` int(11) NOT NULL,
   `otp` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Đang đổ dữ liệu cho bảng `taikhoan`
@@ -548,7 +619,7 @@ CREATE TABLE `thuonghieu` (
   `mathuonghieu` int(11) NOT NULL,
   `tenthuonghieu` varchar(255) NOT NULL,
   `trangthai` tinyint(1) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Đang đổ dữ liệu cho bảng `thuonghieu`
@@ -571,7 +642,7 @@ CREATE TABLE `xuatxu` (
   `maxuatxu` int(11) NOT NULL,
   `tenxuatxu` varchar(50) NOT NULL,
   `trangthai` tinyint(1) DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Đang đổ dữ liệu cho bảng `xuatxu`
@@ -784,7 +855,7 @@ ALTER TABLE `dacdiemsanpham`
 -- AUTO_INCREMENT cho bảng `khachhang`
 --
 ALTER TABLE `khachhang`
-  MODIFY `makh` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `makh` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT cho bảng `khuvuckho`
@@ -796,7 +867,7 @@ ALTER TABLE `khuvuckho`
 -- AUTO_INCREMENT cho bảng `nhacungcap`
 --
 ALTER TABLE `nhacungcap`
-  MODIFY `manhacungcap` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `manhacungcap` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT cho bảng `nhanvien`
@@ -814,7 +885,7 @@ ALTER TABLE `nhomquyen`
 -- AUTO_INCREMENT cho bảng `phienbansanpham`
 --
 ALTER TABLE `phienbansanpham`
-  MODIFY `maphienbansp` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `maphienbansp` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT cho bảng `phieubaohanh`
@@ -832,7 +903,7 @@ ALTER TABLE `phieukiemke`
 -- AUTO_INCREMENT cho bảng `phieunhap`
 --
 ALTER TABLE `phieunhap`
-  MODIFY `maphieunhap` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `maphieunhap` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT cho bảng `phieutra`
@@ -844,13 +915,13 @@ ALTER TABLE `phieutra`
 -- AUTO_INCREMENT cho bảng `phieuxuat`
 --
 ALTER TABLE `phieuxuat`
-  MODIFY `maphieuxuat` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `maphieuxuat` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT cho bảng `sanpham`
 --
 ALTER TABLE `sanpham`
-  MODIFY `masp` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `masp` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT cho bảng `series`
@@ -887,10 +958,65 @@ ALTER TABLE `ctphieuxuat`
   ADD CONSTRAINT `FK__phieuxuat` FOREIGN KEY (`maphieuxuat`) REFERENCES `phieuxuat` (`maphieuxuat`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
+-- Các ràng buộc cho bảng `ctquyen`
+--
+ALTER TABLE `ctquyen`
+  ADD CONSTRAINT `FK__nhomquyen` FOREIGN KEY (`manhomquyen`) REFERENCES `nhomquyen` (`manhomquyen`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
 -- Các ràng buộc cho bảng `phienbansanpham`
 --
 ALTER TABLE `phienbansanpham`
   ADD CONSTRAINT `phienbansanpham_ibfk_1` FOREIGN KEY (`masp`) REFERENCES `sanpham` (`masp`);
+
+--
+-- Các ràng buộc cho bảng `phieudoi`
+--
+ALTER TABLE `phieudoi`
+  ADD CONSTRAINT `FK_phieudoi_ctsanpham` FOREIGN KEY (`maimei`) REFERENCES `ctsanpham` (`maimei`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_phieudoi_taikhoan` FOREIGN KEY (`nguoitao`) REFERENCES `taikhoan` (`manv`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Các ràng buộc cho bảng `phieukiemke`
+--
+ALTER TABLE `phieukiemke`
+  ADD CONSTRAINT `FK_phieukiemke_taikhoan` FOREIGN KEY (`nguoitaophieukiemke`) REFERENCES `taikhoan` (`manv`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Các ràng buộc cho bảng `phieunhap`
+--
+ALTER TABLE `phieunhap`
+  ADD CONSTRAINT `FK_phieunhap_nhacungcap` FOREIGN KEY (`manhacungcap`) REFERENCES `nhacungcap` (`manhacungcap`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_phieunhap_taikhoan` FOREIGN KEY (`nguoitao`) REFERENCES `taikhoan` (`manv`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Các ràng buộc cho bảng `phieutra`
+--
+ALTER TABLE `phieutra`
+  ADD CONSTRAINT `FK_phieutra_ctsanpham` FOREIGN KEY (`maimei`) REFERENCES `ctsanpham` (`maimei`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_phieutra_taikhoan` FOREIGN KEY (`nguoitao`) REFERENCES `taikhoan` (`manv`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Các ràng buộc cho bảng `phieuxuat`
+--
+ALTER TABLE `phieuxuat`
+  ADD CONSTRAINT `FK_phieuxuat_khachhang` FOREIGN KEY (`makh`) REFERENCES `khachhang` (`makh`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_phieuxuat_taikhoan` FOREIGN KEY (`nguoitaophieuxuat`) REFERENCES `taikhoan` (`manv`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Các ràng buộc cho bảng `sanpham`
+--
+ALTER TABLE `sanpham`
+  ADD CONSTRAINT `fk_sp_khuvuckho` FOREIGN KEY (`khuvuckho`) REFERENCES `khuvuckho` (`makhuvuc`),
+  ADD CONSTRAINT `fk_sp_thuonghieu` FOREIGN KEY (`thuonghieu`) REFERENCES `thuonghieu` (`mathuonghieu`),
+  ADD CONSTRAINT `fk_sp_xuatxu` FOREIGN KEY (`xuatxu`) REFERENCES `xuatxu` (`maxuatxu`);
+
+--
+-- Các ràng buộc cho bảng `taikhoan`
+--
+ALTER TABLE `taikhoan`
+  ADD CONSTRAINT `FK_taikhoan_nhanvien` FOREIGN KEY (`manv`) REFERENCES `nhanvien` (`manv`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_taikhoan_nhomquyen` FOREIGN KEY (`manhomquyen`) REFERENCES `nhomquyen` (`manhomquyen`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
