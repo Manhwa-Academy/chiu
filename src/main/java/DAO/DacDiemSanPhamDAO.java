@@ -56,7 +56,7 @@ public class DacDiemSanPhamDAO implements DAOinterface<DacDiemSanPhamDTO> {
         int result = 0;
         try {
             Connection con = JDBCUtil.getConnection();
-            String sql = "UPDATE dacdiemsanpham SET trangthai=0 WHERE madacdiem=?";
+            String sql = "DELETE FROM dacdiemsanpham WHERE madacdiem = ?";
             PreparedStatement pst = con.prepareStatement(sql);
             pst.setString(1, id);
             result = pst.executeUpdate();

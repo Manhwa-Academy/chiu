@@ -59,7 +59,6 @@ import GUI.Component.Notification;
 import GUI.Component.PanelBorderRadius;
 import GUI.Component.SelectForm;
 import GUI.Dialog.ListKhachHang;
-import GUI.Dialog.QRCode_Dialog;
 import GUI.Dialog.SelectImei;
 import helper.Formater;
 
@@ -292,12 +291,35 @@ public final class TaoPhieuXuat extends JPanel {
         jpanelImei.add(jPanelChonImei, BorderLayout.EAST);
 
         scanImei.addActionListener((ActionEvent e) -> {
-            if (ch.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Vui lòng chọn sản phẩm để quét mã");
-            } else {
-                new QRCode_Dialog(owner, "Scan", true, textAreaImei);
+
+            if (ctpb == null || ctpb.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Không có IMEI khả dụng");
+                return;
             }
+
+            // Lấy danh sách IMEI đã chọn
+            String[] selectedImeis = textAreaImei.getText().split("\n");
+
+            for (ChiTietSanPhamDTO ct : ctpb) {
+
+                boolean alreadySelected = false;
+
+                for (String imei : selectedImeis) {
+                    if (imei.trim().equals(ct.getImei())) {
+                        alreadySelected = true;
+                        break;
+                    }
+                }
+
+                if (!alreadySelected) {
+                    textAreaImei.append(ct.getImei() + "\n");
+                    return;
+                }
+            }
+
+            JOptionPane.showMessageDialog(null, "Đã chọn hết IMEI trong kho!");
         });
+
         textAreaImei = new JTextArea();
         textAreaImei.getDocument().addDocumentListener(new DocumentListener() {
             @Override

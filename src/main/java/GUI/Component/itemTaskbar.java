@@ -28,7 +28,7 @@ public class itemTaskbar extends JPanel implements MouseListener {
         this.setLayout(new FlowLayout(1, 10, 7));
         this.setPreferredSize(new Dimension(225, 45));
         this.setBackground(DefaultColor);
-        this.putClientProperty( FlatClientProperties.STYLE, "arc: 15" );
+        this.putClientProperty(FlatClientProperties.STYLE, "arc: 15");
         this.addMouseListener(this);
         lblIcon = new JLabel();
         lblIcon.setBorder(new EmptyBorder(0, 10, 0, 0));
@@ -45,9 +45,9 @@ public class itemTaskbar extends JPanel implements MouseListener {
 
     public itemTaskbar(String linkIcon, String content1, String content2) {
         this.setLayout(new FlowLayout(0, 20, 50));
-//        this.setPreferredSize(new Dimension(250, 45));
+        // this.setPreferredSize(new Dimension(250, 45));
         this.setBackground(DefaultColor);
-        this.putClientProperty( FlatClientProperties.STYLE, "arc: 15" );
+        this.putClientProperty(FlatClientProperties.STYLE, "arc: 15");
         this.addMouseListener(this);
 
         lblIcon = new JLabel();
@@ -62,7 +62,7 @@ public class itemTaskbar extends JPanel implements MouseListener {
         pnlContent.setForeground(FontColor);
         this.add(pnlContent);
 
-//        box[i].setBorder(new EmptyBorder(20, 20, 20, 20));
+        // box[i].setBorder(new EmptyBorder(20, 20, 20, 20));
     }
 
     public itemTaskbar(String linkImg, String tenSP, int soLuong) {
@@ -72,7 +72,16 @@ public class itemTaskbar extends JPanel implements MouseListener {
         this.setBackground(Color.white);
 
         img = new JLabel("");
-        img.setIcon(InputImage.resizeImage(new ImageIcon("./src/img_product/" + linkImg), 38));
+
+        String path = "src/img/img_product/" + linkImg;
+        ImageIcon icon = new ImageIcon(path);
+
+        // Debug nếu ảnh không tồn tại
+        if (icon.getIconWidth() == -1) {
+            System.out.println("Không tìm thấy ảnh: " + path);
+        }
+
+        img.setIcon(InputImage.resizeImage(icon, 38));
         this.add(img, BorderLayout.WEST);
 
         right = new JPanel();
@@ -91,7 +100,6 @@ public class itemTaskbar extends JPanel implements MouseListener {
         pnlSoLuong.putClientProperty("FlatLaf.style", "font: 100% $medium.font");
         pnlSoLuong.setForeground(Color.gray);
         right.add(pnlSoLuong);
-
     }
 
     public itemTaskbar(String linkIcon, String content, String content2, int n) {
@@ -126,17 +134,23 @@ public class itemTaskbar extends JPanel implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-//        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // throw new UnsupportedOperationException("Not supported yet."); // Generated
+        // from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-//        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // throw new UnsupportedOperationException("Not supported yet."); // Generated
+        // from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-//        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // throw new UnsupportedOperationException("Not supported yet."); // Generated
+        // from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override

@@ -40,7 +40,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.PlainDocument;
-
+import helper.ImeiGenerator;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -98,7 +98,7 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
     DacDiemSanPhamBUS dacDiemBus = new DacDiemSanPhamBUS();
     ChiTietSanPhamBUS chiTietSanPhamBUS = new ChiTietSanPhamBUS(); // ⭐ THÊM DÒNG NÀY
     NhanVienDTO nvDto;
-
+    String imei = ImeiGenerator.generateIMEI();
     ArrayList<DTO.SanPhamDTO> listSP = spBUS.getAll();
     ArrayList<PhienBanSanPhamDTO> ch = new ArrayList<>();
     ArrayList<ChiTietPhieuNhapDTO> chitietphieu;
@@ -271,7 +271,9 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
         txtDongia = new InputForm("Giá nhập");
         PlainDocument dongia = (PlainDocument) txtDongia.getTxtForm().getDocument();
         dongia.setDocumentFilter((new NumericDocumentFilter()));
-        String[] arrPtNhap = { "Nhập theo lô", "Nhập từng máy" };
+        String[] arrPtNhap = { "Nhập theo số lượng",
+                "Nhập theo phiên bản"
+        };
         cbxPtNhap = new SelectForm("Phương thức nhập", arrPtNhap);
         cbxPtNhap.cbb.addItemListener(this);
         cbxPtNhap.setPreferredSize(new Dimension(100, 90));

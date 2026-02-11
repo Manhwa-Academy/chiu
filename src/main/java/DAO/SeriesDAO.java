@@ -50,9 +50,11 @@ public class SeriesDAO implements DAOinterface<SeriesDTO> { // Đổi từ HeDie
         int result = 0;
         try (Connection con = JDBCUtil.getConnection();
                 PreparedStatement pst = con
-                        .prepareStatement("UPDATE `series` SET `trangthai` = 0 WHERE maSeries = ?")) {
+                        .prepareStatement("DELETE FROM `series` WHERE maSeries = ?")) {
+
             pst.setString(1, t);
             result = pst.executeUpdate();
+
         } catch (SQLException ex) {
             Logger.getLogger(SeriesDAO.class.getName()).log(Level.SEVERE, null, ex);
         }

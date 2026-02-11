@@ -11,14 +11,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import DTO.NhaCungCapDTO;
 
-public class NhaCungCapDAO implements DAOinterface<NhaCungCapDTO>{
-    public static NhaCungCapDAO getInstance(){
+public class NhaCungCapDAO implements DAOinterface<NhaCungCapDTO> {
+    public static NhaCungCapDAO getInstance() {
         return new NhaCungCapDAO();
     }
 
     @Override
     public int insert(NhaCungCapDTO t) {
-        int result = 0 ;
+        int result = 0;
         try {
             Connection con = (Connection) JDBCUtil.getConnection();
             String sql = "INSERT INTO `nhacungcap`(`manhacungcap`, `tennhacungcap`, `diachi`, `email`, `sdt`, `trangthai`) VALUES (?,?,?,?,?,1)";
@@ -38,7 +38,7 @@ public class NhaCungCapDAO implements DAOinterface<NhaCungCapDTO>{
 
     @Override
     public int update(NhaCungCapDTO t) {
-        int result = 0 ;
+        int result = 0;
         try {
             Connection con = (Connection) JDBCUtil.getConnection();
             String sql = "UPDATE `nhacungcap` SET `tennhacungcap`=?,`diachi`=?,`email`=?,`sdt`=? WHERE `manhacungcap`= ?";
@@ -58,11 +58,11 @@ public class NhaCungCapDAO implements DAOinterface<NhaCungCapDTO>{
 
     @Override
     public int delete(String t) {
-        int result = 0 ;
+        int result = 0;
         try {
-            Connection con = (Connection) JDBCUtil.getConnection();
-            String sql = "UPDATE nhacungcap SET trangthai = 0 WHERE manhacungcap = ?";
-            PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
+            Connection con = JDBCUtil.getConnection();
+            String sql = "DELETE FROM nhacungcap WHERE manhacungcap = ?";
+            PreparedStatement pst = con.prepareStatement(sql);
             pst.setString(1, t);
             result = pst.executeUpdate();
             JDBCUtil.closeConnection(con);
@@ -80,7 +80,7 @@ public class NhaCungCapDAO implements DAOinterface<NhaCungCapDTO>{
             String sql = "SELECT * FROM nhacungcap WHERE trangthai = 1";
             PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
             ResultSet rs = (ResultSet) pst.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 int mancc = rs.getInt("manhacungcap");
                 String tenncc = rs.getString("tennhacungcap");
                 String diachi = rs.getString("diachi");
@@ -104,14 +104,14 @@ public class NhaCungCapDAO implements DAOinterface<NhaCungCapDTO>{
             PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
             pst.setString(1, t);
             ResultSet rs = (ResultSet) pst.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 int mancc = rs.getInt("manhacungcap");
                 String tenncc = rs.getString("tennhacungcap");
                 String diachi = rs.getString("diachi");
                 String email = rs.getString("diachi");
                 String sdt = rs.getString("sdt");
-                
-                result = new NhaCungCapDTO(mancc,tenncc,diachi,email,sdt);
+
+                result = new NhaCungCapDTO(mancc, tenncc, diachi, email, sdt);
             }
             JDBCUtil.closeConnection(con);
         } catch (Exception e) {
@@ -127,10 +127,10 @@ public class NhaCungCapDAO implements DAOinterface<NhaCungCapDTO>{
             String sql = "SELECT `AUTO_INCREMENT` FROM  INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'quanlikhohang' AND   TABLE_NAME   = 'nhacungcap'";
             PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
             ResultSet rs2 = pst.executeQuery(sql);
-            if (!rs2.isBeforeFirst() ) {
+            if (!rs2.isBeforeFirst()) {
                 System.out.println("No data");
             } else {
-                while ( rs2.next() ) {
+                while (rs2.next()) {
                     result = rs2.getInt("AUTO_INCREMENT");
                 }
             }

@@ -165,7 +165,8 @@ public class ChiTietSanPhamDAO implements DAOinterface<ChiTietSanPhamDTO> {
             ResultSet rs = (ResultSet) pst.executeQuery();
             while (rs.next()) {
                 String imei = rs.getString("maimei");
-                int macauhinh = rs.getInt("phienbansp");
+                int macauhinh = rs.getInt("maphienbansp");
+
                 int maphieunhap = rs.getInt("maphieunhap");
                 int maphieuxuat = rs.getInt("maphieuxuat");
                 int tinhtrang = rs.getInt("tinhtrang");

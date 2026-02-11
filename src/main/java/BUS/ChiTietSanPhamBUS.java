@@ -3,6 +3,8 @@ package BUS;
 import DAO.ChiTietSanPhamDAO;
 import DTO.ChiTietSanPhamDTO;
 import DTO.PhienBanSanPhamDTO;
+import helper.ImeiGenerator;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -10,106 +12,189 @@ public class ChiTietSanPhamBUS {
 
     private final ChiTietSanPhamDAO ctspDAO = new ChiTietSanPhamDAO();
     public PhienBanSanPhamBUS pbspbus = new PhienBanSanPhamBUS();
-    public ArrayList<PhienBanSanPhamDTO> listpbsp;
+
     public ArrayList<ChiTietSanPhamDTO> listctsp = new ArrayList<>();
 
     public ChiTietSanPhamBUS() {
-
     }
+
+    /*
+     * ==========================
+     * LẤY DỮ LIỆU
+     * ==========================
+     */
 
     public ArrayList<ChiTietSanPhamDTO> getAllByMaPBSP(int pbsp) {
-        listctsp = ctspDAO.selectbyPb(pbsp);
-        return listctsp;
-    }
-
-    public ArrayList<ChiTietSanPhamDTO> getAll() {
-        return this.listctsp;
-    }
-
-    public ChiTietSanPhamDTO getByIndex(int index) {
-        return this.listctsp.get(index);
+        return ctspDAO.selectbyPb(pbsp);
     }
 
     public ArrayList<ChiTietSanPhamDTO> getAllCTSPbyMasp(int masp) {
-        ArrayList<ChiTietSanPhamDTO> list2 = new ArrayList<>();
-        ArrayList<PhienBanSanPhamDTO> list = pbspbus.getAll(masp);
-        for (PhienBanSanPhamDTO i : list) {
-            ArrayList<ChiTietSanPhamDTO> ctsptemp = this.getAllByMaPBSP(i.getMaphienbansp());
-            list2.addAll(ctsptemp);
-        }
-        return list2;
-    }
+        ArrayList<ChiTietSanPhamDTO> result = new ArrayList<>();
+        ArrayList<PhienBanSanPhamDTO> listPB = pbspbus.getAll(masp);
 
-    public HashMap<Integer, ArrayList<ChiTietSanPhamDTO>> getChiTietSanPhamFromMaPN(int maphieunhap) {
-        ArrayList<ChiTietSanPhamDTO> chitietsp = ctspDAO.selectAllByMaPhieuNhap(maphieunhap);
-        HashMap<Integer, ArrayList<ChiTietSanPhamDTO>> result = new HashMap<>();
-        for (ChiTietSanPhamDTO i : chitietsp) {
-            if (result.get(i.getMaphienbansp()) == null) {
-                result.put(i.getMaphienbansp(), new ArrayList<>());
-            }
-        }
-        for (ChiTietSanPhamDTO i : chitietsp) {
-            result.get(i.getMaphienbansp()).add(i);
+        for (PhienBanSanPhamDTO pb : listPB) {
+            result.addAll(getAllByMaPBSP(pb.getMaphienbansp()));
         }
         return result;
-    }
-
-    public HashMap<Integer, ArrayList<ChiTietSanPhamDTO>> getChiTietSanPhamFromMaPX(int maphieuxuat) {
-        ArrayList<ChiTietSanPhamDTO> chitietsp = ctspDAO.selectAllByMaPhieuXuat(maphieuxuat);
-        HashMap<Integer, ArrayList<ChiTietSanPhamDTO>> result = new HashMap<>();
-        for (ChiTietSanPhamDTO i : chitietsp) {
-            if (result.get(i.getMaphienbansp()) == null) {
-                result.put(i.getMaphienbansp(), new ArrayList<>());
-            }
-        }
-        for (ChiTietSanPhamDTO i : chitietsp) {
-            result.get(i.getMaphienbansp()).add(i);
-        }
-        return result;
-    }
-
-    public void Show(ArrayList<ChiTietSanPhamDTO> x) {
-        for (ChiTietSanPhamDTO a : x) {
-            System.out.println(a.getImei());
-        }
-    }
-
-    public void updateXuat(ArrayList<ChiTietSanPhamDTO> ct) {
-        for (ChiTietSanPhamDTO chiTietSanPhamDTO : ct) {
-            ctspDAO.updateXuat(chiTietSanPhamDTO);
-        }
-    }
-
-    public boolean checkImeiExists(ArrayList<ChiTietSanPhamDTO> list) {
-        for (ChiTietSanPhamDTO ct : list) {
-            if (ctspDAO.checkImeiExists(ct.getImei())) {
-                return false; // IMEI đã tồn tại trong kho
-            }
-        }
-        return true; // Tất cả IMEI đều hợp lệ
     }
 
     public ArrayList<ChiTietSanPhamDTO> selectAllByMaPhieuXuat(int maphieu) {
         return ctspDAO.selectAllByMaPhieuXuat(maphieu);
     }
 
-    public ArrayList<ChiTietSanPhamDTO> FilterPBvaTT(String text, int masp, int phienban, int tinhtrang) {
-        ArrayList<ChiTietSanPhamDTO> list = this.getAllCTSPbyMasp(masp);
+    /*
+     * ==========================
+     * TỰ ĐỘNG TẠO IMEI
+     * ==========================
+     */
+
+    public ArrayList<ChiTietSanPhamDTO> generateChiTietSanPham(
+            int maphienban,
+            int soluong,
+            int maphieunhap) {
+
+        ArrayList<ChiTietSanPhamDTO> list = new ArrayList<>();
+
+        while (list.size() < soluong) {
+
+            String imei = ImeiGenerator.generateIMEI();
+
+            boolean existsInDB = ctspDAO.checkImeiExists(imei);
+
+            boolean existsInList = list.stream()
+                    .anyMatch(ct -> ct.getImei().equals(imei));
+
+            if (!existsInDB && !existsInList) {
+
+                ChiTietSanPhamDTO ct = new ChiTietSanPhamDTO(
+                        imei,
+                        maphienban,
+                        maphieunhap,
+                        0, // chưa xuất
+                        1 // còn hàng
+                );
+
+                list.add(ct);
+            }
+        }
+
+        return list;
+    }
+
+    /*
+     * ==========================
+     * INSERT DANH SÁCH IMEI
+     * ==========================
+     */
+
+    public void insertList(ArrayList<ChiTietSanPhamDTO> list) {
+        ctspDAO.insert_mutiple(list);
+    }
+
+    /*
+     * ==========================
+     * CẬP NHẬT KHI XUẤT
+     * ==========================
+     */
+
+    public void updateXuat(ArrayList<ChiTietSanPhamDTO> list) {
+        for (ChiTietSanPhamDTO ct : list) {
+            ctspDAO.updateXuat(ct);
+        }
+    }
+
+    /*
+     * ==========================
+     * FILTER
+     * ==========================
+     */
+
+    public ArrayList<ChiTietSanPhamDTO> FilterPBvaTT(
+            String text,
+            int masp,
+            int phienban,
+            int tinhtrang) {
+
+        ArrayList<ChiTietSanPhamDTO> list = getAllCTSPbyMasp(masp);
         ArrayList<ChiTietSanPhamDTO> result = new ArrayList<>();
+
         for (ChiTietSanPhamDTO i : list) {
-            if (i.getMaphienbansp() == phienban && i.getTinhtrang() == tinhtrang && i.getImei().contains(text))
+            if (i.getMaphienbansp() == phienban
+                    && i.getTinhtrang() == tinhtrang
+                    && i.getImei().contains(text)) {
                 result.add(i);
+            }
         }
         return result;
     }
 
-    public ArrayList<ChiTietSanPhamDTO> FilterPBvaAll(String text, int masp, int phienban) {
-        ArrayList<ChiTietSanPhamDTO> list = this.getAllCTSPbyMasp(masp);
+    public ArrayList<ChiTietSanPhamDTO> FilterPBvaAll(
+            String text,
+            int masp,
+            int phienban) {
+
+        ArrayList<ChiTietSanPhamDTO> list = getAllCTSPbyMasp(masp);
         ArrayList<ChiTietSanPhamDTO> result = new ArrayList<>();
+
         for (ChiTietSanPhamDTO i : list) {
-            if (i.getMaphienbansp() == phienban && i.getImei().contains(text))
+            if (i.getMaphienbansp() == phienban
+                    && i.getImei().contains(text)) {
                 result.add(i);
+            }
         }
         return result;
     }
+
+    public boolean checkImeiExists(ArrayList<ChiTietSanPhamDTO> list) {
+
+        for (ChiTietSanPhamDTO ct : list) {
+
+            // Nếu IMEI đã tồn tại trong DB
+            if (ctspDAO.checkImeiExists(ct.getImei())) {
+                return false;
+            }
+        }
+
+        return true; // Tất cả IMEI đều chưa tồn tại
+    }
+
+    /*
+     * ==========================
+     * GROUP THEO PHIẾU
+     * ==========================
+     */
+
+    public HashMap<Integer, ArrayList<ChiTietSanPhamDTO>> getChiTietSanPhamFromMaPN(int maphieunhap) {
+
+        ArrayList<ChiTietSanPhamDTO> list = ctspDAO.selectAllByMaPhieuNhap(maphieunhap);
+
+        HashMap<Integer, ArrayList<ChiTietSanPhamDTO>> result = new HashMap<>();
+
+        for (ChiTietSanPhamDTO i : list) {
+            result
+                    .computeIfAbsent(i.getMaphienbansp(), k -> new ArrayList<>())
+                    .add(i);
+        }
+
+        return result;
+    }
+
+    public HashMap<Integer, ArrayList<ChiTietSanPhamDTO>> getChiTietSanPhamFromMaPX(int maphieuxuat) {
+
+        ArrayList<ChiTietSanPhamDTO> list = ctspDAO.selectAllByMaPhieuXuat(maphieuxuat);
+
+        HashMap<Integer, ArrayList<ChiTietSanPhamDTO>> result = new HashMap<>();
+
+        for (ChiTietSanPhamDTO ct : list) {
+
+            if (!result.containsKey(ct.getMaphienbansp())) {
+                result.put(ct.getMaphienbansp(), new ArrayList<>());
+            }
+
+            result.get(ct.getMaphienbansp()).add(ct);
+        }
+
+        return result;
+    }
+
 }

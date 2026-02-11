@@ -69,9 +69,9 @@ public class NhanVienDAO implements DAOinterface<NhanVienDTO> {
     public int delete(String t) {
         int result = 0;
         try {
-            Connection con = (Connection) JDBCUtil.getConnection();
-            String sql = "Update nhanvien set `trangthai` = -1 WHERE manv = ?";
-            PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
+            Connection con = JDBCUtil.getConnection();
+            String sql = "DELETE FROM nhanvien WHERE manv = ?";
+            PreparedStatement pst = con.prepareStatement(sql);
             pst.setString(1, t);
             result = pst.executeUpdate();
             JDBCUtil.closeConnection(con);

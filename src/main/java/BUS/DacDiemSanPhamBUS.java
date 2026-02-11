@@ -17,6 +17,19 @@ public class DacDiemSanPhamBUS {
         return this.listDacDiemSanPham;
     }
 
+    public int getIndexByTen(String ten) {
+
+        ArrayList<DacDiemSanPhamDTO> ds = this.getAll();
+
+        for (int i = 0; i < ds.size(); i++) {
+            if (ds.get(i).getTendacdiem().equalsIgnoreCase(ten)) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
     public String[] getArrTenDacDiemSanPham() {
         String[] result = new String[listDacDiemSanPham.size()];
         for (int i = 0; i < listDacDiemSanPham.size(); i++) {
@@ -24,7 +37,6 @@ public class DacDiemSanPhamBUS {
         }
         return result;
     }
-
 
     public DacDiemSanPhamDTO getByIndex(int index) {
         return this.listDacDiemSanPham.get(index);

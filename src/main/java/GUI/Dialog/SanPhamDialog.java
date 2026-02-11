@@ -12,7 +12,6 @@ import DAO.PhienBanSanPhamDAO;
 import DAO.SanPhamDAO;
 import DTO.PhienBanSanPhamDTO;
 import DTO.SanPhamDTO;
-import DTO.ThuocTinhSanPham.SeriesDTO;
 import GUI.Component.ButtonCustom;
 import GUI.Component.HeaderTitle;
 
@@ -38,9 +37,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
+
 import java.util.Random;
-import javax.swing.BoxLayout;
+
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -59,121 +58,155 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
 
     private HeaderTitle titlePage;
 
-    private JComboBox<String> loaiSanPhamComboBox;
-    private JPanel pninfosanpham, pnbottom, pnCenter, pninfosanphamright, pnmain, pncard2;
-    private ButtonCustom btnThemCHMS, btnHuyBo, btnAddCauHinh, btnEditCTCauHinh, btnDeleteCauHinh, btnResetCauHinh,
-            btnAddSanPham, btnBack, btnViewCauHinh;
-    InputForm tenSP, chipxuly, dungluongpin, kichthuocman, thoigianbaohanh, phienbanhdh, camerasau, cameratruoc;
-    InputForm txtgianhap, txtgiaxuat;
-    SelectForm cbxRom, cbxRam, cbxMausac, hedieuhanh, xuatxu;
-    SelectForm thuonghieu, khuvuc;
-    InputImage hinhanh;
-    JTable tblcauhinh;
-    JScrollPane scrolltblcauhinh;
-    DefaultTableModel tblModelch;
-    DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-    GUI.Panel.SanPham jpSP;
+    // ===== ComboBox / Form =====
+    private SelectForm cbxLoaiMoHinh;
+    private SelectForm cbxSeries;
+    private SelectForm cbxXuatXu;
+    private SelectForm cbxThuongHieu;
+    private SelectForm cbxKhuVucKho;
+    private SelectForm cbxMauSac;
+    private SelectForm cbxTyLe;
+    private SelectForm cbxChatLieu;
+    private SelectForm cbxNhanVat;
 
-    CategoryBUS ramBus = new CategoryBUS();
-    CharacterBUS romBus = new CharacterBUS();
-    DacDiemSanPhamBUS dacDiemBus = new DacDiemSanPhamBUS();
-    ThuongHieuBUS thuonghieuBus = new ThuongHieuBUS();
-    SeriesBUS seriesBUS = new SeriesBUS();
-    KhuVucKhoBUS kvkhoBus = new KhuVucKhoBUS();
-    XuatXuBUS xuatXuBUS = new XuatXuBUS();
-    CategoryBUS mausacBus = new CategoryBUS();
-    ArrayList<PhienBanSanPhamDTO> listch = new ArrayList<>();
-    SanPhamDTO sp;
-    String[] arrkhuvuc;
-    String[] arrthuonghieu;
-    String[] arrhHDH;
-    String[] arrXX;
-    SelectForm cbxTyle, cbxChatlieu;
-    InputForm nhanvat, tyle, chatlieu;
-    // Lấy danh sách các loại sản phẩm từ CategoryBUS
-    CategoryBUS categoryBUS = new CategoryBUS();
-    String[] arrCategoryArray = categoryBUS.getArrCategory(); // Lấy mảng String[]
-    ArrayList<String> arrCategory = new ArrayList<>(Arrays.asList(arrCategoryArray)); // Chuyển đổi thành ArrayList
-    DacDiemSanPhamBUS dacDiemSanPhamBUS = new DacDiemSanPhamBUS();
-    int masp;
-    int mach;
-    private ButtonCustom btnEditCT;
-    private ButtonCustom btnSaveCH;
-    private ButtonCustom btnAddCauHinhEdit;
-    private ButtonCustom btnEditCTCauHinhEdit;
-    private ButtonCustom btnDeleteCauHinhEdit;
-    private ButtonCustom btnResetCauHinhEdit;
+    // ===== Panel =====
+    private JPanel pnThongTinMoHinh;
+    private JPanel pnBottom;
+    private JPanel pnCenter;
+    private JPanel pnHinhAnh;
+    private JPanel pnMain;
+    private JPanel pnPhienBan;
+
+    // ===== Button =====
+    private ButtonCustom btnTaoMoHinh;
+    private ButtonCustom btnHuy;
+    private ButtonCustom btnThemPhienBan;
+    private ButtonCustom btnSuaPhienBan;
+    private ButtonCustom btnXoaPhienBan;
+    private ButtonCustom btnResetPhienBan;
+    private ButtonCustom btnThemSanPham;
+    private ButtonCustom btnQuayLai;
+    private ButtonCustom btnXemPhienBan;
+    private ButtonCustom btnSuaChiTiet;
+    private ButtonCustom btnLuuThongTin;
+    private ButtonCustom btnThemPhienBanEdit;
+    private ButtonCustom btnSuaPhienBanEdit;
+    private ButtonCustom btnXoaPhienBanEdit;
+    private ButtonCustom btnResetPhienBanEdit;
+
+    // ===== Input =====
+    private InputForm txtTenMoHinh;
+    private InputForm txtTyLe;
+    private InputForm txtChatLieu;
+    private InputForm txtGiaNhap;
+    private InputForm txtGiaBan;
+
+    // ===== Image =====
+    private InputImage inputHinhAnh;
+
+    // ===== Table =====
+    private JTable tblPhienBan;
+    private JScrollPane scrollPhienBan;
+    private DefaultTableModel modelPhienBan;
+    private DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+
+    // ===== BUS =====
+    private CategoryBUS loaiMoHinhBus = new CategoryBUS();
+    private CharacterBUS nhanVatBus = new CharacterBUS();
+    private DacDiemSanPhamBUS dacDiemBus = new DacDiemSanPhamBUS();
+    private ThuongHieuBUS thuongHieuBus = new ThuongHieuBUS();
+    private SeriesBUS seriesBus = new SeriesBUS();
+    private KhuVucKhoBUS khuVucKhoBus = new KhuVucKhoBUS();
+    private XuatXuBUS xuatXuBus = new XuatXuBUS();
+
+    // ===== Data =====
+    private ArrayList<PhienBanSanPhamDTO> danhSachPhienBan = new ArrayList<>();
+    private SanPhamDTO sanPham;
+
+    private String[] dsKhuVuc;
+    private String[] dsThuongHieu;
+    private String[] dsSeries;
+    private String[] dsXuatXu;
+    private String[] dsLoaiMoHinh;
+    private GUI.Panel.SanPham jpSP;
+    private int maSanPham;
+    private int maPhienBan;
 
     public void init(SanPham jpSP) {
         this.jpSP = jpSP;
 
-        // Khởi tạo mã sản phẩm (masp) và mã cấu hình (mach) tự động từ database
-        masp = jpSP.spBUS.spDAO.getAutoIncrement();
-        mach = PhienBanSanPhamDAO.getInstance().getAutoIncrement();
+        // ===== Auto increment =====
+        maSanPham = jpSP.spBUS.spDAO.getAutoIncrement();
+        maPhienBan = PhienBanSanPhamDAO.getInstance().getAutoIncrement();
 
-        // Khởi tạo pninfosanpham và các panel khác
-        pninfosanpham = new JPanel(new GridLayout(3, 4, 0, 0)); // Khởi tạo với layout GridLayout
-        pninfosanpham.setBackground(Color.WHITE);
+        // ===== Panel chính =====
+        pnThongTinMoHinh = new JPanel(new GridLayout(3, 4, 10, 10));
+        pnThongTinMoHinh.setBackground(Color.WHITE);
 
-        // Tiến hành các bước còn lại sau khi khởi tạo panel
-        arrkhuvuc = kvkhoBus.getArrTenKhuVuc();
-        arrthuonghieu = thuonghieuBus.getArrTenThuongHieu();
-        arrhHDH = seriesBUS.getArrTenSeries(); // Hệ điều hành hoặc Series / Anime
-        arrXX = xuatXuBUS.getArrTenXuatXu(); // Xuất xứ
+        // ===== Load dữ liệu từ BUS =====
+        dsKhuVuc = khuVucKhoBus.getArrTenKhuVuc();
+        dsThuongHieu = thuongHieuBus.getArrTenThuongHieu();
+        dsSeries = seriesBus.getArrTenSeries();
+        dsXuatXu = xuatXuBus.getArrTenXuatXu();
+        dsLoaiMoHinh = loaiMoHinhBus.getArrCategory();
 
-        // Các combobox và input form
-        cbxTyle = new SelectForm("Tỷ lệ mô hình", dacDiemSanPhamBUS.getArrTenDacDiemSanPham()); // Tỷ lệ mô hình
-        cbxChatlieu = new SelectForm("Chất liệu", dacDiemSanPhamBUS.getArrTenDacDiemSanPham()); // Chất liệu
+        // ===== Form nhập liệu chính =====
+        inputHinhAnh = new InputImage("Hình minh họa");
 
-        // Các trường nhập liệu cho giá nhập và giá xuất
-        txtgianhap = new InputForm("Giá nhập");
-        txtgiaxuat = new InputForm("Giá xuất");
+        txtTenMoHinh = new InputForm("Tên mô hình");
+        cbxNhanVat = new SelectForm(
+                "Nhân vật",
+                nhanVatBus.getArrTenNhanVat());
 
-        // Khởi tạo các đối tượng cần thiết như bảng cấu hình sản phẩm, model dữ liệu,
-        // renderer
-        tblModelch = new DefaultTableModel();
-        tblModelch.setColumnIdentifiers(new String[] {
-                "Màu sắc", "Tỷ lệ", "Chất liệu", "Giá nhập", "Giá xuất"
+        txtTyLe = new InputForm("Tỷ lệ mô hình");
+        txtChatLieu = new InputForm("Chất liệu");
+
+        cbxLoaiMoHinh = new SelectForm("Loại sản phẩm", dsLoaiMoHinh);
+        cbxXuatXu = new SelectForm("Xuất xứ", dsXuatXu);
+        cbxThuongHieu = new SelectForm("Thương hiệu", dsThuongHieu);
+        cbxSeries = new SelectForm("Anime / Series", dsSeries);
+        cbxKhuVucKho = new SelectForm("Khu vực kho", dsKhuVuc);
+
+        // ===== Giá =====
+        txtGiaNhap = new InputForm("Giá nhập");
+        txtGiaBan = new InputForm("Giá bán");
+
+        // ===== Table phiên bản =====
+        modelPhienBan = new DefaultTableModel();
+
+        modelPhienBan.setColumnIdentifiers(new String[] {
+                "STT",
+                "Mã phiên bản",
+                "Tên phiên bản",
+                "Nhân vật",
+                "Tỷ lệ",
+                "Chất liệu",
+                "Giá nhập",
+                "Giá bán"
         });
-        tblcauhinh = new JTable(tblModelch);
-        scrolltblcauhinh = new JScrollPane(tblcauhinh);
-        tblcauhinh.setDefaultRenderer(Object.class, centerRenderer);
 
-        // Tạo các button tương tác với cấu hình sản phẩm
-        btnAddCauHinh = new ButtonCustom("Thêm mô hình", "success", 14);
-        btnEditCTCauHinh = new ButtonCustom("Sửa mô hình", "warning", 14);
-        btnDeleteCauHinh = new ButtonCustom("Xoá mô hình", "danger", 14);
-        btnResetCauHinh = new ButtonCustom("Làm mới", "excel", 14);
+        tblPhienBan = new JTable(modelPhienBan);
+        tblPhienBan.setDefaultRenderer(Object.class, centerRenderer);
+        scrollPhienBan = new JScrollPane(tblPhienBan);
 
-        // Khởi tạo các button chức năng
-        btnThemCHMS = new ButtonCustom("Tạo mô hình", "success", 14);
-        btnHuyBo = new ButtonCustom("Huỷ bỏ", "danger", 14);
-        btnSaveCH = new ButtonCustom("Lưu mô hình", "success", 14);
+        // ===== Button =====
+        btnThemPhienBan = new ButtonCustom("Thêm phiên bản", "success", 14);
+        btnSuaPhienBan = new ButtonCustom("Sửa phiên bản", "warning", 14);
+        btnXoaPhienBan = new ButtonCustom("Xoá phiên bản", "danger", 14);
+        btnResetPhienBan = new ButtonCustom("Làm mới", "excel", 14);
 
-        // Set các action listener cho button
-        btnAddCauHinh.addActionListener(this);
-        btnEditCTCauHinh.addActionListener(this);
-        btnDeleteCauHinh.addActionListener(this);
-        btnResetCauHinh.addActionListener(this);
-        btnSaveCH.addActionListener(this);
-        btnThemCHMS.addActionListener(this);
-        btnHuyBo.addActionListener(this);
+        btnTaoMoHinh = new ButtonCustom("Tạo mô hình", "success", 14);
+        btnHuy = new ButtonCustom("Huỷ bỏ", "danger", 14);
+        btnLuuThongTin = new ButtonCustom("Lưu thông tin", "success", 14);
 
-        // Khởi tạo lại các combobox, input form cho các thông tin sản phẩm
-        hinhanh = new InputImage("Hình minh họa");
-        tenSP = new InputForm("Tên sản phẩm");
-        xuatxu = new SelectForm("Xuất xứ", arrXX);
-        thuonghieu = new SelectForm("Thương hiệu", arrthuonghieu);
-        hedieuhanh = new SelectForm("Series / Anime", arrhHDH); // Đổi thành Series / Anime
-        khuvuc = new SelectForm("Khu vực kho", arrkhuvuc);
-
-        // Cập nhật lại combobox Loại sản phẩm
-        JComboBox<String> loaiSanPhamComboBox = new JComboBox<>(arrCategory.toArray(new String[0]));
-        pninfosanpham.add(loaiSanPhamComboBox); // Thêm vào panel
-
-        // Thêm ComboBox cho Chất liệu
-        SelectForm loaiSanPham = new SelectForm("Loại sản phẩm", arrCategory.toArray(new String[0]));
-        pninfosanpham.add(loaiSanPham); // Thêm vào panel
+        // ===== Add listener =====
+        btnThemPhienBan.addActionListener(this);
+        btnSuaPhienBan.addActionListener(this);
+        btnXoaPhienBan.addActionListener(this);
+        btnResetPhienBan.addActionListener(this);
+        btnTaoMoHinh.addActionListener(this);
+        btnHuy.addActionListener(this);
+        btnLuuThongTin.addActionListener(this);
     }
 
     public SanPhamDialog(SanPham jpSP, JFrame owner, String title, boolean modal, String type) {
@@ -182,434 +215,513 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         initComponents(title, type);
     }
 
-    public SanPhamDialog(SanPham jpSP, JFrame owner, String title, boolean modal, String type, SanPhamDTO sp) {
+    public SanPhamDialog(SanPham jpSP, JFrame owner,
+            String title, boolean modal,
+            String type, SanPhamDTO sp) {
+
         super(owner, title, modal);
-        init(jpSP);
-        this.sp = sp;
-        this.listch = jpSP.spBUS.cauhinhBus.getAll(sp.getMasp());
+
+        init(jpSP); // 👈 BẮT BUỘC PHẢI CÓ
+
+        this.sanPham = sp;
+
+        this.danhSachPhienBan = this.jpSP.spBUS.cauhinhBus.getAll(sp.getMasp());
+
         initComponents(title, type);
     }
 
     public void initCardOne(String type) {
+
         pnCenter = new JPanel(new BorderLayout());
-        pninfosanpham = new JPanel(new GridLayout(3, 4, 0, 0));
-        pninfosanpham.setBackground(Color.WHITE);
-        pnCenter.add(pninfosanpham, BorderLayout.CENTER);
 
-        pninfosanphamright = new JPanel();
-        pninfosanphamright.setBackground(Color.WHITE);
-        pninfosanphamright.setPreferredSize(new Dimension(300, 600));
-        pninfosanphamright.setBorder(new EmptyBorder(0, 10, 0, 10));
-        pnCenter.add(pninfosanphamright, BorderLayout.WEST);
+        // ===== Panel thông tin =====
+        pnThongTinMoHinh = new JPanel(new GridLayout(3, 4, 10, 10));
+        pnThongTinMoHinh.setBackground(Color.WHITE);
+        pnCenter.add(pnThongTinMoHinh, BorderLayout.CENTER);
 
-        // Khởi tạo các đối tượng InputForm và SelectForm cho các trường sản phẩm
-        tenSP = new InputForm("Tên mô hình");
-        xuatxu = new SelectForm("Xuất xứ", arrXX); // Cập nhật với danh sách xuất xứ phù hợp
+        // ===== Panel hình ảnh =====
+        pnHinhAnh = new JPanel();
+        pnHinhAnh.setBackground(Color.WHITE);
+        pnHinhAnh.setPreferredSize(new Dimension(300, 600));
+        pnHinhAnh.setBorder(new EmptyBorder(0, 10, 0, 10));
+        pnCenter.add(pnHinhAnh, BorderLayout.WEST);
 
-        // Các trường nhập liệu chỉ dành cho mô hình sản phẩm như Nhân vật, Tỷ lệ, Chất
-        // liệu
-        nhanvat = new InputForm("Nhân vật");
-        tyle = new InputForm("Tỷ lệ mô hình"); // Ví dụ: 1/7, 1/8...
-        chatlieu = new InputForm("Chất liệu");
+        // ===== Input =====
+        txtTenMoHinh = new InputForm("Tên mô hình");
 
-        // Các combobox như hệ điều hành, thương hiệu, khu vực kho sẽ được giữ lại
-        hedieuhanh = new SelectForm("Anime / Series", arrhHDH); // Series / Anime
-        thuonghieu = new SelectForm("Thương hiệu", arrthuonghieu); // Thương hiệu sản phẩm
-        khuvuc = new SelectForm("Khu vực kho", arrkhuvuc); // Khu vực kho lưu trữ sản phẩm
-        // Thêm SelectForm cho "Loại sản phẩm"
-        SelectForm loaiSanPham = new SelectForm("Loại sản phẩm", arrCategory.toArray(new String[0]));
-        pninfosanpham.add(loaiSanPham); // Thêm vào panel
-        // Các trường nhập liệu cho giá nhập và giá xuất
-        txtgianhap = new InputForm("Giá nhập");
-        txtgiaxuat = new InputForm("Giá xuất");
+        txtTyLe = new InputForm("Tỷ lệ mô hình");
+        txtChatLieu = new InputForm("Chất liệu");
 
-        // Nhập ảnh cho mô hình sản phẩm
-        hinhanh = new InputImage("Hình minh họa");
+        // ===== ComboBox =====
+        cbxLoaiMoHinh = new SelectForm("Loại sản phẩm", dsLoaiMoHinh);
+        cbxSeries = new SelectForm("Anime / Series", dsSeries);
+        cbxThuongHieu = new SelectForm("Thương hiệu", dsThuongHieu);
+        cbxXuatXu = new SelectForm("Xuất xứ", dsXuatXu);
+        cbxKhuVucKho = new SelectForm("Khu vực kho", dsKhuVuc);
 
-        // Thêm các InputForm và SelectForm vào panel pninfosanpham để hiển thị trên
-        // giao diện
-        pninfosanpham.add(tenSP);
-        pninfosanpham.add(xuatxu);
-        pninfosanpham.add(nhanvat);
-        pninfosanpham.add(tyle);
-        pninfosanpham.add(chatlieu);
-        pninfosanpham.add(hedieuhanh);
-        pninfosanpham.add(thuonghieu);
-        pninfosanpham.add(khuvuc);
-        pninfosanphamright.add(hinhanh);
+        // ===== Image =====
+        inputHinhAnh = new InputImage("Hình minh họa");
 
-        pnbottom = new JPanel(new FlowLayout());
-        pnbottom.setBorder(new EmptyBorder(20, 0, 10, 0));
-        pnbottom.setBackground(Color.white);
+        // ===== Add vào panel =====
+        pnThongTinMoHinh.add(cbxLoaiMoHinh);
+        pnThongTinMoHinh.add(txtTenMoHinh);
+        pnThongTinMoHinh.add(cbxNhanVat);
+
+        pnThongTinMoHinh.add(txtTyLe);
+        pnThongTinMoHinh.add(txtChatLieu);
+        pnThongTinMoHinh.add(cbxSeries);
+        pnThongTinMoHinh.add(cbxThuongHieu);
+        pnThongTinMoHinh.add(cbxXuatXu);
+        pnThongTinMoHinh.add(cbxKhuVucKho);
+
+        pnHinhAnh.add(inputHinhAnh);
+
+        // ===== Bottom =====
+        pnBottom = new JPanel(new FlowLayout());
+        pnBottom.setBorder(new EmptyBorder(20, 0, 10, 0));
+        pnBottom.setBackground(Color.WHITE);
+
         switch (type) {
+
             case "view" -> {
-                btnViewCauHinh = new ButtonCustom("Xem mô hình", "warning", 14);
-                btnViewCauHinh.addActionListener(this);
-                pnbottom.add(btnViewCauHinh);
+                btnXemPhienBan = new ButtonCustom("Xem mô hình", "warning", 14);
+                btnXemPhienBan.addActionListener(this);
+                pnBottom.add(btnXemPhienBan);
             }
+
             case "update" -> {
-                btnSaveCH = new ButtonCustom("Lưu thông tin", "success", 14);
-                btnEditCT = new ButtonCustom("Sửa mô hình", "warning", 14);
-                btnSaveCH.addActionListener(this);
-                btnEditCT.addActionListener(this);
-                pnbottom.add(btnSaveCH);
-                pnbottom.add(btnEditCT);
+                btnLuuThongTin = new ButtonCustom("Lưu thông tin", "success", 14);
+                btnSuaChiTiet = new ButtonCustom("Sửa mô hình", "warning", 14);
+
+                btnLuuThongTin.addActionListener(this);
+                btnSuaChiTiet.addActionListener(this);
+
+                pnBottom.add(btnLuuThongTin);
+                pnBottom.add(btnSuaChiTiet);
             }
+
             case "create" -> {
-                btnThemCHMS = new ButtonCustom("Tạo mô hình", "success", 14);
-                btnThemCHMS.addActionListener(this);
-                pnbottom.add(btnThemCHMS);
+                btnTaoMoHinh = new ButtonCustom("Tạo mô hình", "success", 14);
+                btnTaoMoHinh.addActionListener(this);
+                pnBottom.add(btnTaoMoHinh);
             }
         }
 
-        btnHuyBo = new ButtonCustom("Huỷ bỏ", "danger", 14);
-        btnHuyBo.addActionListener(this);
-        pnbottom.add(btnHuyBo);
-        pnCenter.add(pnbottom, BorderLayout.SOUTH);
+        btnHuy = new ButtonCustom("Huỷ bỏ", "danger", 14);
+        btnHuy.addActionListener(this);
+        pnBottom.add(btnHuy);
+
+        pnCenter.add(pnBottom, BorderLayout.SOUTH);
     }
 
     public void initCardTwo(String type) {
-        pncard2 = new JPanel(new BorderLayout());
-        JPanel cauhinhtop = new JPanel(new GridLayout(1, 5));
-        cbxRom = new SelectForm("Mô hình", romBus.getArrKichThuoc());
-        cbxRam = new SelectForm("Category", ramBus.getArrTenCategory());
-        cbxMausac = new SelectForm("Đặc điểm", dacDiemSanPhamBUS.getArrTenDacDiemSanPham());
 
-        txtgianhap = new InputForm("Giá nhập");
-        PlainDocument nhap = (PlainDocument) txtgianhap.getTxtForm().getDocument();
-        nhap.setDocumentFilter((new NumericDocumentFilter()));
+        pnPhienBan = new JPanel(new BorderLayout());
 
-        txtgiaxuat = new InputForm("Giá xuất");
-        PlainDocument xuat = (PlainDocument) txtgiaxuat.getTxtForm().getDocument();
-        xuat.setDocumentFilter((new NumericDocumentFilter()));
+        // ===== Top: nhập giá =====
+        JPanel topPanel = new JPanel(new GridLayout(1, 2, 10, 10));
 
-        cauhinhtop.add(cbxRom);
-        cauhinhtop.add(cbxRam);
-        cauhinhtop.add(cbxMausac);
-        cauhinhtop.add(txtgianhap);
-        cauhinhtop.add(txtgiaxuat);
+        txtGiaNhap = new InputForm("Giá nhập");
+        txtGiaBan = new InputForm("Giá bán");
 
-        JPanel cauhinhcenter = new JPanel(new BorderLayout());
+        PlainDocument nhapDoc = (PlainDocument) txtGiaNhap.getTxtForm().getDocument();
+        nhapDoc.setDocumentFilter(new NumericDocumentFilter());
 
-        JPanel cauhinhcenter_left = new JPanel();
-        BoxLayout bl = new BoxLayout(cauhinhcenter_left, BoxLayout.Y_AXIS);
-        cauhinhcenter_left.setPreferredSize(new Dimension(100, 226));
-        cauhinhcenter_left.setBorder(new EmptyBorder(10, 10, 10, 10));
-        cauhinhcenter_left.setLayout(bl);
-        cauhinhcenter_left.setBackground(Color.WHITE);
-        tblcauhinh = new JTable();
-        tblcauhinh.addMouseListener(new MouseAdapter() {
+        PlainDocument banDoc = (PlainDocument) txtGiaBan.getTxtForm().getDocument();
+        banDoc.setDocumentFilter(new NumericDocumentFilter());
+
+        topPanel.add(txtGiaNhap);
+        topPanel.add(txtGiaBan);
+
+        // ===== Table =====
+        modelPhienBan = new DefaultTableModel();
+
+        modelPhienBan.setColumnIdentifiers(new String[] {
+                "STT",
+                "Mã phiên bản",
+                "Tên phiên bản",
+                "Nhân vật",
+                "Tỷ lệ",
+                "Chất liệu",
+                "Giá nhập",
+                "Giá bán"
+        });
+
+        tblPhienBan = new JTable(modelPhienBan);
+        tblPhienBan.setDefaultRenderer(Object.class, centerRenderer);
+
+        scrollPhienBan = new JScrollPane(tblPhienBan);
+        // 👇 THÊM ĐOẠN NÀY Ở ĐÂY
+        tblPhienBan.getColumnModel().getColumn(0).setPreferredWidth(40); // STT
+        tblPhienBan.getColumnModel().getColumn(1).setPreferredWidth(90); // Mã phiên bản
+        tblPhienBan.getColumnModel().getColumn(2).setPreferredWidth(150); // Tên phiên bản
+        tblPhienBan.getColumnModel().getColumn(3).setPreferredWidth(120); // Nhân vật
+        tblPhienBan.getColumnModel().getColumn(4).setPreferredWidth(80); // Tỷ lệ
+        tblPhienBan.getColumnModel().getColumn(5).setPreferredWidth(100); // Chất liệu
+        tblPhienBan.getColumnModel().getColumn(6).setPreferredWidth(100); // Giá nhập
+        tblPhienBan.getColumnModel().getColumn(7).setPreferredWidth(100); // Giá bán
+        tblPhienBan.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                int index = getRowCauHinh();
+                int index = tblPhienBan.getSelectedRow();
                 if (index != -1) {
-                    setInfoCauHinh(listch.get(index));
+                    setInfoCauHinh(danhSachPhienBan.get(index));
                 }
             }
         });
 
-        // Kiểm tra xem có dấu đóng ngoặc thừa ở đây không
-        // Dấu đóng ngoặc này có thể bị thiếu hoặc thừa
+        // ===== Nút thao tác =====
+        JPanel rightPanel = new JPanel(new FlowLayout());
 
-        new JScrollPane(tblcauhinh);
-        tblModelch = new DefaultTableModel();
-
-        // Cập nhật lại header của bảng sao cho phù hợp với mô hình sản phẩm
-        String[] header = new String[] {
-                "STT", // Số thứ tự
-                "Mã mô hình", // Mã mô hình (nếu cần)
-                "Tên mô hình", // Tên mô hình sản phẩm
-                "Nhân vật", // Nhân vật (từ series hoặc anime)
-                "Tỷ lệ", // Tỷ lệ mô hình (1/7, 1/8, ...)
-                "Chất liệu", // Chất liệu mô hình
-                "Giá nhập", // Giá nhập vào của mô hình
-                "Giá xuất" // Giá bán mô hình
-        };
-
-        // Đảm bảo khi thiết lập lại bảng, header này được sử dụng
-        tblModelch.setColumnIdentifiers(header);
-
-        tblcauhinh.setModel(tblModelch);
-        scrolltblcauhinh.setViewportView(tblcauhinh);
-        tblcauhinh.setDefaultRenderer(Object.class, centerRenderer);
-        cauhinhcenter_left.add(scrolltblcauhinh);
-
-        JPanel cauhinhcenter_right = new JPanel(
-                new FlowLayout());
-        cauhinhcenter_right.setPreferredSize(new Dimension(180, 10));
-        cauhinhcenter_right.setBackground(Color.white);
-        cauhinhcenter_right.setBorder(new EmptyBorder(0, 0, 0, 10));
         if (!type.equals("update")) {
-            btnAddCauHinh = new ButtonCustom("Thêm mô hình", "success", 14);
-            btnEditCTCauHinh = new ButtonCustom("Sửa mô hình", "warning", 14);
-            btnDeleteCauHinh = new ButtonCustom("Xoá mô hình", "danger", 14);
-            btnResetCauHinh = new ButtonCustom("Làm mới", "excel", 14);
 
-            btnAddCauHinh.addActionListener(this);
-            btnEditCTCauHinh.addActionListener(this);
-            btnDeleteCauHinh.addActionListener(this);
-            btnResetCauHinh.addActionListener(this);
-            cauhinhcenter_right.add(btnAddCauHinh);
-            cauhinhcenter_right.add(btnEditCTCauHinh);
-            cauhinhcenter_right.add(btnDeleteCauHinh);
-            cauhinhcenter_right.add(btnResetCauHinh);
+            btnThemPhienBan = new ButtonCustom("Thêm mô hình", "success", 14);
+            btnSuaPhienBan = new ButtonCustom("Sửa mô hình", "warning", 14);
+            btnXoaPhienBan = new ButtonCustom("Xoá mô hình", "danger", 14);
+            btnResetPhienBan = new ButtonCustom("Làm mới", "excel", 14);
+
+            btnThemPhienBan.addActionListener(this);
+            btnSuaPhienBan.addActionListener(this);
+            btnXoaPhienBan.addActionListener(this);
+            btnResetPhienBan.addActionListener(this);
+
+            rightPanel.add(btnThemPhienBan);
+            rightPanel.add(btnSuaPhienBan);
+            rightPanel.add(btnXoaPhienBan);
+            rightPanel.add(btnResetPhienBan);
+
         } else {
-            btnAddCauHinhEdit = new ButtonCustom("Thêm mô hình", "success", 14);
-            btnEditCTCauHinhEdit = new ButtonCustom("Sửa mô hình", "warning", 14);
-            btnDeleteCauHinhEdit = new ButtonCustom("Xoá mô hình", "danger", 14);
-            btnResetCauHinhEdit = new ButtonCustom("Làm mới", "excel", 14);
 
-            btnAddCauHinhEdit.addActionListener(this);
-            btnEditCTCauHinhEdit.addActionListener(this);
-            btnDeleteCauHinhEdit.addActionListener(this);
-            btnResetCauHinhEdit.addActionListener(this);
+            btnThemPhienBanEdit = new ButtonCustom("Thêm mô hình", "success", 14);
+            btnSuaPhienBanEdit = new ButtonCustom("Sửa mô hình", "warning", 14);
+            btnXoaPhienBanEdit = new ButtonCustom("Xoá mô hình", "danger", 14);
+            btnResetPhienBanEdit = new ButtonCustom("Làm mới", "excel", 14);
 
-            cauhinhcenter_right.add(btnAddCauHinhEdit);
-            cauhinhcenter_right.add(btnEditCTCauHinhEdit);
-            cauhinhcenter_right.add(btnDeleteCauHinhEdit);
-            cauhinhcenter_right.add(btnResetCauHinhEdit);
+            btnThemPhienBanEdit.addActionListener(this);
+            btnSuaPhienBanEdit.addActionListener(this);
+            btnXoaPhienBanEdit.addActionListener(this);
+            btnResetPhienBanEdit.addActionListener(this);
+
+            rightPanel.add(btnThemPhienBanEdit);
+            rightPanel.add(btnSuaPhienBanEdit);
+            rightPanel.add(btnXoaPhienBanEdit);
+            rightPanel.add(btnResetPhienBanEdit);
         }
 
-        cauhinhcenter.add(cauhinhcenter_left, BorderLayout.CENTER);
-        cauhinhcenter.add(cauhinhcenter_right, BorderLayout.EAST);
+        // ===== Center layout =====
+        JPanel centerPanel = new JPanel(new BorderLayout());
+        centerPanel.add(scrollPhienBan, BorderLayout.CENTER);
+        centerPanel.add(rightPanel, BorderLayout.EAST);
 
-        JPanel cauhinhbottom = new JPanel(
-                new FlowLayout());
-        cauhinhbottom.setBackground(Color.white);
-        cauhinhbottom.setBorder(new EmptyBorder(0, 0, 10, 0));
+        // ===== Bottom =====
+        JPanel bottomPanel = new JPanel(new FlowLayout());
 
         switch (type) {
+
             case "view" -> {
-                loadDataToTableCauHinh(listch);
-                btnAddCauHinh.setVisible(false);
-                btnEditCTCauHinh.setVisible(false);
-                btnDeleteCauHinh.setVisible(false);
-                btnResetCauHinh.setVisible(false);
-                cauhinhcenter.remove(cauhinhcenter_right);
+                loadDataToTableCauHinh(danhSachPhienBan);
+                rightPanel.setVisible(false);
             }
-            case "update" -> loadDataToTableCauHinh(listch);
+
+            case "update" -> loadDataToTableCauHinh(danhSachPhienBan);
+
             case "create" -> {
-                btnAddSanPham = new ButtonCustom("Thêm sản phẩm", "success", 14);
-                btnAddSanPham.addActionListener(this);
-                cauhinhbottom.add(btnAddSanPham);
+                btnThemSanPham = new ButtonCustom("Thêm sản phẩm", "success", 14);
+                btnThemSanPham.addActionListener(this);
+                bottomPanel.add(btnThemSanPham);
             }
         }
 
-        btnBack = new ButtonCustom("Quay lại trang trước", "warning", 14);
-        btnBack.addActionListener(this);
-        cauhinhbottom.add(btnBack);
+        btnQuayLai = new ButtonCustom("Quay lại trang trước", "warning", 14);
+        btnQuayLai.addActionListener(this);
+        bottomPanel.add(btnQuayLai);
 
-        pncard2.add(cauhinhtop, BorderLayout.NORTH);
-        pncard2.add(cauhinhcenter, BorderLayout.CENTER);
-        pncard2.add(cauhinhbottom, BorderLayout.SOUTH);
-
+        pnPhienBan.add(topPanel, BorderLayout.NORTH);
+        pnPhienBan.add(centerPanel, BorderLayout.CENTER);
+        pnPhienBan.add(bottomPanel, BorderLayout.SOUTH);
     }
 
     public void initComponents(String title, String type) {
+
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+
         this.setSize(new Dimension(1150, 480));
         this.setLayout(new BorderLayout(0, 0));
+
         titlePage = new HeaderTitle(title.toUpperCase());
 
-        pnmain = new JPanel(new CardLayout());
+        pnMain = new JPanel(new CardLayout());
 
+        // Khởi tạo 2 card
         initCardOne(type);
         initCardTwo(type);
 
-        pnmain.add(pnCenter);
-        pnmain.add(pncard2);
+        pnMain.add(pnCenter, "card1");
+        pnMain.add(pnPhienBan, "card2");
 
-        switch (type) {
-            case "view" -> setInfo(sp);
-            case "update" -> setInfo(sp);
-            default -> {
-            }
+        // Nếu là view hoặc update thì load dữ liệu lên form
+        if (type.equals("view") || type.equals("update")) {
+            setInfo(sanPham);
         }
-        // throw new AssertionError();
 
         this.add(titlePage, BorderLayout.NORTH);
-        this.add(pnmain, BorderLayout.CENTER);
+        this.add(pnMain, BorderLayout.CENTER);
+
         this.setLocationRelativeTo(null);
         this.setVisible(true);
     }
 
     public String addImage(String urlImg) {
+
         Random randomGenerator = new Random();
         int ram = randomGenerator.nextInt(1000);
+
         File sourceFile = new File(urlImg);
-        String destPath = "/img/img_product";
+
+        String destPath = "src/img/img_product"; // sửa lại
         File destFolder = new File(destPath);
+
+        if (!destFolder.exists()) {
+            destFolder.mkdirs();
+        }
+
         String newName = ram + sourceFile.getName();
+
         try {
             Path dest = Paths.get(destFolder.getPath(), newName);
             Files.copy(sourceFile.toPath(), dest);
         } catch (IOException e) {
+            e.printStackTrace();
         }
+
         return newName;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+
         Object source = e.getSource();
-        if (source == btnThemCHMS && validateCardOne()) {
-            CardLayout c = (CardLayout) pnmain.getLayout();
-            c.next(pnmain);
-        } else if (source == btnBack) {
-            CardLayout c = (CardLayout) pnmain.getLayout();
-            c.previous(pnmain);
-        } else if (source == btnAddCauHinh) {
+
+        // ===== CHUYỂN CARD =====
+        if (source == btnTaoMoHinh && validateCardOne()) {
+            CardLayout cl = (CardLayout) pnMain.getLayout();
+            cl.next(pnMain);
+        }
+
+        else if (source == btnQuayLai) {
+            CardLayout cl = (CardLayout) pnMain.getLayout();
+            cl.previous(pnMain);
+        }
+
+        // ===== THÊM PHIÊN BẢN =====
+        else if (source == btnThemPhienBan) {
             if (validateCardTwo() && checkTonTai()) {
-                listch.add(getCauHinh());
-                loadDataToTableCauHinh(this.listch);
+                danhSachPhienBan.add(getCauHinh());
+                loadDataToTableCauHinh(danhSachPhienBan);
                 resetFormCauHinh();
             }
-        } else if (source == btnResetCauHinh) {
+        }
+
+        else if (source == btnResetPhienBan) {
             resetFormCauHinh();
-            loadDataToTableCauHinh(this.listch);
-        } else if (source == btnDeleteCauHinh) {
+            loadDataToTableCauHinh(danhSachPhienBan);
+        }
+
+        else if (source == btnXoaPhienBan) {
             int index = getRowCauHinh();
-            this.listch.remove(index);
-            loadDataToTableCauHinh(this.listch);
-            resetFormCauHinh();
-        } else if (source == btnEditCTCauHinh) {
-            eventEditCauHinh();
-            loadDataToTableCauHinh(this.listch);
-        } else if (source == btnAddSanPham) {
-            eventAddSanPham();
-        } else if (source == btnViewCauHinh) {
-            CardLayout c = (CardLayout) pnmain.getLayout();
-            c.next(pnmain);
-        } else if (source == btnEditCT) {
-            CardLayout c = (CardLayout) pnmain.getLayout();
-            c.next(pnmain);
-        } else if (source == btnSaveCH) {
-            SanPhamDTO snNew = getInfo();
-            if (!snNew.getHinhanh().equals(this.sp.getHinhanh())) {
-                snNew.setHinhanh(addImage(snNew.getHinhanh()));
-            }
-            snNew.setMasp(this.sp.getMasp());
-            SanPhamDAO.getInstance().update(sp);
-            this.jpSP.spBUS.update(snNew);
-            this.jpSP.loadDataTalbe(this.jpSP.spBUS.getAll());
-            int input = JOptionPane.showConfirmDialog(this,
-                    "Bạn có muốn chỉnh sửa chi tiết sản phẩm?", "Chỉnh sửa chi tiết",
-                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
-            // 0=ok, 2=cancel
-            if (input == 0) {
-                CardLayout c = (CardLayout) pnmain.getLayout();
-                c.next(pnmain);
+            if (index >= 0) {
+                danhSachPhienBan.remove(index);
+                loadDataToTableCauHinh(danhSachPhienBan);
+                resetFormCauHinh();
             }
         }
-        if (source == btnEditCTCauHinhEdit) {
+
+        else if (source == btnSuaPhienBan) {
+            eventEditCauHinh();
+            loadDataToTableCauHinh(danhSachPhienBan);
+        }
+
+        // ===== THÊM SẢN PHẨM =====
+        else if (source == btnThemSanPham) {
+            eventAddSanPham();
+        }
+
+        // ===== XEM / SỬA CHI TIẾT =====
+        else if (source == btnXemPhienBan || source == btnSuaChiTiet) {
+            CardLayout cl = (CardLayout) pnMain.getLayout();
+            cl.next(pnMain);
+        }
+
+        // ===== LƯU THÔNG TIN =====
+        else if (source == btnLuuThongTin) {
+
+            SanPhamDTO spMoi = getInfo();
+
+            if (!spMoi.getHinhanh().equals(sanPham.getHinhanh())) {
+                spMoi.setHinhanh(addImage(spMoi.getHinhanh()));
+            }
+
+            spMoi.setMasp(sanPham.getMasp());
+
+            SanPhamDAO.getInstance().update(spMoi);
+            jpSP.spBUS.update(spMoi);
+            jpSP.loadDataTalbe(jpSP.spBUS.getAll());
+
+            int input = JOptionPane.showConfirmDialog(
+                    this,
+                    "Bạn có muốn chỉnh sửa phiên bản sản phẩm?",
+                    "Chỉnh sửa chi tiết",
+                    JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.INFORMATION_MESSAGE);
+
+            if (input == JOptionPane.OK_OPTION) {
+                CardLayout cl = (CardLayout) pnMain.getLayout();
+                cl.next(pnMain);
+            }
+        }
+
+        // ===== SỬA PHIÊN BẢN (EDIT MODE) =====
+        else if (source == btnSuaPhienBanEdit) {
+
             if (validateCardTwo()) {
                 int index = getRowCauHinh();
-                if (index < 0) {
-                    JOptionPane.showMessageDialog(this, "Vui lòng chọn mô hình");
-                } else {
-                    // Tạo đối tượng DacDiemSanPhamBUS thay vì gọi phương thức tĩnh
-                    DacDiemSanPhamBUS dacDiemSanPhamBUS = new DacDiemSanPhamBUS();
 
-                    // Lấy thông tin từ combobox
-                    String tyle = dacDiemSanPhamBUS.getByIndex(cbxTyle.getSelectedIndex()).getTendacdiem();
+                if (index >= 0) {
 
-                    // Cập nhật thông tin cho listch mà không thay đổi PhienBanSanPhamDTO
-                    listch.get(index).setTenphienban(tyle); // Chỉ thay đổi tên phiên bản theo tỷ lệ
-                    // Hoặc nếu bạn cần lưu trữ thêm các thông tin tạm thời, có thể sử dụng
-                    // đối tượng lưu trữ ngoài (ví dụ: một lớp tạm thời).
+                    String tyLe = txtTyLe.getText();
 
-                    // Cập nhật thông tin giá nhập, giá xuất
-                    listch.get(index).setGianhap(Integer.parseInt(txtgianhap.getText()));
-                    listch.get(index).setGiaxuat(Integer.parseInt(txtgiaxuat.getText()));
+                    danhSachPhienBan.get(index).setTenphienban(tyLe);
+                    danhSachPhienBan.get(index)
+                            .setGianhap(Integer.parseInt(txtGiaNhap.getText()));
+                    danhSachPhienBan.get(index)
+                            .setGiaxuat(Integer.parseInt(txtGiaBan.getText()));
 
-                    // Cập nhật lại cơ sở dữ liệu
-                    PhienBanSanPhamDAO.getInstance().update(listch.get(index));
+                    PhienBanSanPhamDAO.getInstance()
+                            .update(danhSachPhienBan.get(index));
 
-                    // Tải lại bảng và reset form
-                    loadDataToTableCauHinh(this.listch);
+                    loadDataToTableCauHinh(danhSachPhienBan);
                     resetFormCauHinh();
                 }
             }
         }
 
-        if (source == btnDeleteCauHinhEdit)
+        // ===== XOÁ PHIÊN BẢN EDIT =====
+        else if (source == btnXoaPhienBanEdit) {
 
-        {
             int index = getRowCauHinh();
-            // Gọi phương thức delete từ DAO để đánh dấu phiên bản sản phẩm là đã xóa (trạng
-            // thái = 0)
-            int result = PhienBanSanPhamDAO.getInstance()
-                    .delete(String.valueOf(this.listch.get(index).getMaphienbansp()));
-            if (result > 0) { // Nếu xóa thành công
-                this.listch.remove(index);
-                loadDataToTableCauHinh(this.listch); // Cập nhật lại bảng
-                resetFormCauHinh(); // Reset form
-            } else {
-                JOptionPane.showMessageDialog(this, "Xóa không thành công!");
+
+            if (index >= 0) {
+
+                int result = PhienBanSanPhamDAO.getInstance()
+                        .delete(String.valueOf(
+                                danhSachPhienBan.get(index)
+                                        .getMaphienbansp()));
+
+                if (result > 0) {
+                    danhSachPhienBan.remove(index);
+                    loadDataToTableCauHinh(danhSachPhienBan);
+                    resetFormCauHinh();
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                            "Xóa không thành công!");
+                }
             }
         }
-        if (source == btnAddCauHinhEdit) {
+
+        // ===== THÊM PHIÊN BẢN EDIT =====
+        else if (source == btnThemPhienBanEdit) {
+
             if (validateCardTwo() && checkTonTai()) {
-                PhienBanSanPhamDAO.getInstance().insert(getCauHinh(sp.getMasp()));
-                loadDataToTableCauHinh(this.listch);
+
+                PhienBanSanPhamDAO.getInstance()
+                        .insert(getCauHinh(sanPham.getMasp()));
+
+                loadDataToTableCauHinh(danhSachPhienBan);
                 resetFormCauHinh();
             }
         }
-        if (source == btnResetCauHinhEdit) {
+
+        else if (source == btnResetPhienBanEdit) {
             resetFormCauHinh();
-            loadDataToTableCauHinh(this.listch);
+            loadDataToTableCauHinh(danhSachPhienBan);
         }
-        if (source == btnHuyBo) {
+
+        // ===== HỦY =====
+        else if (source == btnHuy) {
             dispose();
         }
     }
 
     public void eventAddSanPham() {
-        SanPhamDTO sp = getInfo();
-        sp.setHinhanh(addImage(sp.getHinhanh()));
-        if (jpSP.spBUS.add(sp, listch)) {
-            JOptionPane.showMessageDialog(this, "Thêm sản phẩm thành công !");
-            jpSP.loadDataTalbe(jpSP.listSP);
+
+        SanPhamDTO sanPhamMoi = getInfo();
+
+        sanPhamMoi.setHinhanh(
+                addImage(sanPhamMoi.getHinhanh()));
+
+        if (jpSP.spBUS.add(sanPhamMoi, danhSachPhienBan)) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Thêm mô hình thành công!");
+
+            jpSP.loadDataTalbe(jpSP.spBUS.getAll());
+
             dispose();
         }
     }
 
     public void eventEditCauHinh() {
-        if (validateCardTwo()) { // Kiểm tra các trường dữ liệu
-            int index = getRowCauHinh(); // Lấy dòng được chọn trong bảng cấu hình
+
+        if (validateCardTwo()) {
+
+            int index = getRowCauHinh();
+
             if (index < 0) {
-                JOptionPane.showMessageDialog(this, "Vui lòng chọn mô hình");
-            } else {
-                // Lấy giá trị từ các trường nhập liệu
-                String tyleText = tyle.getText(); // Lấy tỷ lệ mô hình từ giao diện
-                String chatlieuText = chatlieu.getText(); // Lấy chất liệu mô hình từ giao diện
-
-                // Kiểm tra nếu các trường tỷ lệ và chất liệu trống
-                if (Validation.isEmpty(tyleText) || Validation.isEmpty(chatlieuText)) {
-                    JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!");
-                    return; // Dừng lại nếu thông tin không hợp lệ
-                }
-
-                // Cập nhật các thông tin khác từ các trường nhập liệu
-                listch.get(index).setGianhap(Integer.parseInt(txtgianhap.getText())); // Lấy giá nhập
-                listch.get(index).setGiaxuat(Integer.parseInt(txtgiaxuat.getText())); // Lấy giá xuất
-
-                // Cập nhật vào database
-                PhienBanSanPhamDAO.getInstance().update(listch.get(index));
-
-                // Cập nhật lại bảng với thông tin mới
-                loadDataToTableCauHinh(this.listch);
-
-                // Reset lại form nhập liệu
-                resetFormCauHinh();
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn phiên bản");
+                return;
             }
+
+            String tyLeText = txtTyLe.getText();
+            String chatLieuText = txtChatLieu.getText();
+
+            if (Validation.isEmpty(tyLeText) ||
+                    Validation.isEmpty(chatLieuText)) {
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Vui lòng nhập đầy đủ thông tin!");
+                return;
+            }
+
+            PhienBanSanPhamDTO phienBan = danhSachPhienBan.get(index);
+
+            phienBan.setTenphienban(tyLeText + " - " + chatLieuText);
+            phienBan.setGianhap(
+                    Integer.parseInt(txtGiaNhap.getText()));
+            phienBan.setGiaxuat(
+                    Integer.parseInt(txtGiaBan.getText()));
+
+            PhienBanSanPhamDAO
+                    .getInstance()
+                    .update(phienBan);
+
+            loadDataToTableCauHinh(danhSachPhienBan);
+
+            resetFormCauHinh();
         }
     }
 
     public int getRowCauHinh() {
-        int index = tblcauhinh.getSelectedRow();
+
+        int index = tblPhienBan.getSelectedRow();
+
         if (index == -1) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn mô hình !");
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Vui lòng chọn phiên bản mô hình!");
         }
+
         return index;
     }
 
@@ -671,150 +783,166 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
     }
 
     public SanPhamDTO getInfo() {
-        // Lấy thông tin từ giao diện
-        String hinhanh = this.hinhanh.getUrl_img(); // Lấy URL của hình ảnh
-        String tensp = tenSP.getText(); // Tên sản phẩm
-        int xuatxu = xuatXuBUS.getAll().get(this.xuatxu.getSelectedIndex()).getMaxuatxu(); // Xuất xứ
-        int thuonghieu = thuonghieuBus.getAll().get(this.thuonghieu.getSelectedIndex()).getMathuonghieu(); // Thương
-                                                                                                           // hiệu
-        int khuvuckho = kvkhoBus.getAll().get(this.khuvuc.getSelectedIndex()).getMakhuvuc(); // Khu vực kho
 
-        // Lấy thông tin từ các trường nhập liệu
-        String series = this.hedieuhanh.getName(); // Lấy giá trị từ InputForm hedieuhanh (hệ điều hành/series)
-        String nhanvat = this.nhanvat.getText(); // Nhân vật
-        String tyle = this.tyle.getText(); // Tỷ lệ mô hình (1/7, 1/8, ...)
-        String chatlieu = this.chatlieu.getText(); // Chất liệu mô hình
-        String loaiSanPham = (String) loaiSanPhamComboBox.getSelectedItem(); // Lấy giá trị "Loại sản phẩm" từ JComboBox
-        // Lấy ngày hiện tại
+        String hinhAnh = inputHinhAnh.getUrl_img();
+        String tenMoHinh = txtTenMoHinh.getText();
+
+        int maXuatXu = xuatXuBus.getAll()
+                .get(cbxXuatXu.getSelectedIndex())
+                .getMaxuatxu();
+
+        int maThuongHieu = thuongHieuBus.getAll()
+                .get(cbxThuongHieu.getSelectedIndex())
+                .getMathuonghieu();
+
+        int maKhuVucKho = khuVucKhoBus.getAll()
+                .get(cbxKhuVucKho.getSelectedIndex())
+                .getMakhuvuc();
+
+        String series = cbxSeries.getValue();
+        String nhanVat = cbxNhanVat.getValue();
+
+        String tyLe = txtTyLe.getText();
+        String chatLieu = txtChatLieu.getText();
+        String loaiMoHinh = cbxLoaiMoHinh.getValue();
+
         LocalDate currentDate = LocalDate.now();
-
-        // Định dạng ngày theo "yyyy-MM-dd"
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-        String ngaytao = currentDate.format(formatter); // Sẽ trả về ngày hiện tại theo định dạng mong muốn
+        String ngayTao = currentDate.format(formatter);
 
-        // Trả về đối tượng SanPhamDTO với thông tin đã lấy
         return new SanPhamDTO(
-                masp, // Mã sản phẩm
-                tensp, // Tên sản phẩm
-                hinhanh, // Hình ảnh
-                thuonghieu, // Thương hiệu
-                series, // Series (hoặc Anime)
-                nhanvat, // Nhân vật
-                tyle, // Tỷ lệ mô hình
-                chatlieu, // Chất liệu mô hình
-                xuatxu, // Xuất xứ
-                khuvuckho, // Khu vực kho
-                loaiSanPham, // Loại sản phẩm
-                0, // Số lượng tồn (mặc định là 0)
-                1, // Trạng thái (mặc định là 1)
-                ngaytao // Ngày tạo
-        );
+                maSanPham,
+                tenMoHinh,
+                hinhAnh,
+                maThuongHieu,
+                series,
+                nhanVat,
+                tyLe,
+                chatLieu,
+                maXuatXu,
+                maKhuVucKho,
+                loaiMoHinh,
+                0,
+                1,
+                ngayTao);
     }
 
     public void setInfo(SanPhamDTO sp) {
-        // Đảm bảo rằng bạn thiết lập thông tin cho các trường trong form dựa trên dữ
-        // liệu trong sp
 
-        // Cập nhật hình ảnh
-        hinhanh.setUrl_img(sp.getHinhanh()); // Hình ảnh (Lấy URL của hình ảnh)
+        this.sanPham = sp;
 
-        // Cập nhật tên sản phẩm
-        tenSP.setText(sp.getTensp()); // Tên sản phẩm
+        // Hình ảnh
+        inputHinhAnh.setUrl_img(sp.getHinhanh());
 
-        // Cập nhật xuất xứ
-        xuatxu.setSelectedIndex(xuatXuBUS.getIndexByMaXX(sp.getXuatxu())); // Xuất xứ (chọn theo index từ danh sách xuất
-                                                                           // xứ)
+        // Tên mô hình
+        txtTenMoHinh.setText(sp.getTensp());
 
-        // Cập nhật thương hiệu
-        thuonghieu.setSelectedIndex(thuonghieuBus.getIndexByMaLH(sp.getThuonghieu())); // Thương hiệu (chọn theo index
-                                                                                       // từ danh sách thương hiệu)
+        // Xuất xứ
+        cbxXuatXu.setSelectedIndex(
+                xuatXuBus.getIndexByMaXX(sp.getXuatxu()));
 
-        // Cập nhật hệ điều hành/series (series hoặc anime)
-        String seriesName = sp.getSeries(); // Giả sử sp.getSeries() trả về tên series (String)
-        int seriesIndex = -1;
-        for (SeriesDTO series : seriesBUS.getAll()) {
-            if (series.getTenSeries().equalsIgnoreCase(seriesName)) {
-                seriesIndex = series.getMaSeries();
-                break; // Dừng khi tìm thấy
-            }
+        // Thương hiệu
+        cbxThuongHieu.setSelectedIndex(
+                thuongHieuBus.getIndexByMaLH(sp.getThuonghieu()));
+
+        // Series
+        int indexSeries = seriesBus.getIndexByTenSeries(sp.getSeries());
+        if (indexSeries >= 0) {
+            cbxSeries.setSelectedIndex(indexSeries);
         }
 
-        // Nếu tìm thấy series, cập nhật chỉ mục cho hedieuhanh
-        if (seriesIndex != -1) {
-            hedieuhanh.setSelectedIndex(seriesBUS.getIndexByMaSeries(seriesIndex));
-        } else {
-            // Xử lý khi không tìm thấy series
-            System.out.println("Không tìm thấy series với tên: " + seriesName);
+        // Khu vực kho
+        cbxKhuVucKho.setSelectedIndex(
+                khuVucKhoBus.getIndexByMaKhuVuc(sp.getKhuvuckho()));
+
+        // Thông tin mô hình
+        int indexNV = nhanVatBus.getIndexByTen(sp.getNhanvat());
+        if (indexNV >= 0) {
+            cbxNhanVat.setSelectedIndex(indexNV);
         }
 
-        // Cập nhật khu vực kho
-        khuvuc.setSelectedIndex(jpSP.spBUS.getIndexByMaSP(sp.getKhuvuckho())); // Khu vực kho (chọn theo index từ danh
-                                                                               // sách khu vực kho)
-
-        // Các thuộc tính mô hình khác như Nhân vật, Tỷ lệ, Chất liệu
-        nhanvat.setText(sp.getNhanvat()); // Nhân vật (có thể là tên nhân vật trong series hoặc anime)
-        tyle.setText(sp.getTyle()); // Tỷ lệ mô hình (ví dụ: 1/7, 1/8)
-        chatlieu.setText(sp.getChatlieu()); // Chất liệu mô hình
+        txtTyLe.setText(sp.getTyle());
+        txtChatLieu.setText(sp.getChatlieu());
     }
 
     public PhienBanSanPhamDTO getCauHinh() {
-        // Lấy thông tin từ các ComboBox và TextField
-        String tenphienban = this.tenSP.getText(); // Lấy tên phiên bản từ trường nhập liệu (InputForm)
 
-        int gianhap = Integer.parseInt(txtgianhap.getText()); // Giá nhập
-        int giaban = Integer.parseInt(txtgiaxuat.getText()); // Giá bán
-        int soluongton = 0; // Bạn có thể gán số lượng tồn mặc định là 0 hoặc lấy từ một trường nhập liệu
-                            // khác nếu có
+        String tyLe = txtTyLe.getText();
+        String chatLieu = txtChatLieu.getText();
 
-        // Tạo đối tượng PhienBanSanPhamDTO với thông tin mới
-        PhienBanSanPhamDTO chsp = new PhienBanSanPhamDTO(mach, masp, tenphienban, gianhap, giaban, soluongton, 1);
-        mach++; // Tăng giá trị cho mã cấu hình sản phẩm
+        String tenPhienBan = tyLe + " - " + chatLieu;
 
-        return chsp; // Trả về đối tượng PhienBanSanPhamDTO mới
+        int giaNhap = Integer.parseInt(txtGiaNhap.getText());
+        int giaBan = Integer.parseInt(txtGiaBan.getText());
+
+        int soLuongTon = 0;
+
+        PhienBanSanPhamDTO phienBan = new PhienBanSanPhamDTO(
+                maPhienBan,
+                maSanPham,
+                tenPhienBan,
+                giaNhap,
+                giaBan,
+                soLuongTon,
+                1);
+
+        maPhienBan++;
+
+        return phienBan;
     }
 
-    public PhienBanSanPhamDTO getCauHinh(int masanpham) {
-        String tenphienban = "Phiên bản X"; // Ví dụ, bạn có thể lấy tên phiên bản từ một trường nhập liệu
-        int gianhap = Integer.parseInt(txtgianhap.getText()); // Giá nhập
-        int giaban = Integer.parseInt(txtgiaxuat.getText()); // Giá bán
-        int soluongton = 0; // Giả sử bạn để mặc định là 0
+    public PhienBanSanPhamDTO getCauHinh(int maSanPham) {
 
-        // Tạo đối tượng PhienBanSanPhamDTO với thông tin đã lấy
-        PhienBanSanPhamDTO chsp = new PhienBanSanPhamDTO(
-                PhienBanSanPhamDAO.getInstance().getAutoIncrement(), // Tự động tăng mã cấu hình sản phẩm
-                masanpham, // Mã sản phẩm
-                tenphienban, // Tên phiên bản
-                gianhap, // Giá nhập
-                giaban, // Giá bán
-                soluongton, // Số lượng tồn
-                1 // Trạng thái
-        );
+        String tyLe = txtTyLe.getText();
+        String chatLieu = txtChatLieu.getText();
 
-        // Thêm cấu hình sản phẩm vào danh sách nếu cần
-        this.listch.add(chsp);
+        String tenPhienBan = tyLe + " - " + chatLieu;
 
-        return chsp; // Trả về đối tượng PhienBanSanPhamDTO mới
+        int giaNhap = Integer.parseInt(txtGiaNhap.getText());
+        int giaBan = Integer.parseInt(txtGiaBan.getText());
+
+        int soLuongTon = 0;
+
+        PhienBanSanPhamDTO phienBan = new PhienBanSanPhamDTO(
+                PhienBanSanPhamDAO.getInstance().getAutoIncrement(),
+                maSanPham,
+                tenPhienBan,
+                giaNhap,
+                giaBan,
+                soLuongTon,
+                1);
+
+        danhSachPhienBan.add(phienBan);
+
+        return phienBan;
     }
 
     public boolean validateCardOne() {
-        boolean check = true;
-        if (Validation.isEmpty(tenSP.getText()) || Validation.isEmpty((String) xuatxu.getValue())
-                || Validation.isEmpty(chipxuly.getText()) || Validation.isEmpty(dungluongpin.getText())
-                || Validation.isEmpty(kichthuocman.getText()) || Validation.isEmpty(hedieuhanh.getValue())
-                || Validation.isEmpty(camerasau.getText()) || Validation.isEmpty(cameratruoc.getText())
-                || Validation.isEmpty(thoigianbaohanh.getText()) || Validation.isEmpty(phienbanhdh.getText())) {
-            check = false;
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin !");
-        } else {
-            // Check number
+
+        if (Validation.isEmpty(txtTenMoHinh.getText()) ||
+                cbxNhanVat.getSelectedIndex() < 0 ||
+                Validation.isEmpty(txtTyLe.getText()) ||
+                Validation.isEmpty(txtChatLieu.getText()) ||
+                cbxSeries.getSelectedIndex() < 0 ||
+                cbxXuatXu.getSelectedIndex() < 0 ||
+                cbxThuongHieu.getSelectedIndex() < 0 ||
+                cbxKhuVucKho.getSelectedIndex() < 0 ||
+                cbxLoaiMoHinh.getSelectedIndex() < 0) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Vui lòng nhập đầy đủ thông tin mô hình!");
+            return false;
         }
-        return check;
+
+        return true;
     }
 
     public boolean validateCardTwo() {
         boolean check = true;
-        if (Validation.isEmpty(txtgianhap.getText()) && Validation.isEmpty(txtgiaxuat.getText())) {
+        if (Validation.isEmpty(txtGiaNhap.getText()) ||
+                Validation.isEmpty(txtGiaBan.getText())) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin !");
             check = false;
         } else {
@@ -824,48 +952,79 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
     }
 
     public boolean checkTonTai() {
-        boolean check = true;
 
-        // Tạo đối tượng PhienBanSanPhamBUS (nếu chưa có đối tượng)
-        PhienBanSanPhamBUS phienBanSanPhamBUS = new PhienBanSanPhamBUS();
+        PhienBanSanPhamBUS phienBanBUS = new PhienBanSanPhamBUS();
 
-        // Kiểm tra sự trùng lặp của các cấu hình dựa trên các thuộc tính liên quan đến
-        // figure
-        if (phienBanSanPhamBUS.checkDuplicate(listch, getCauHinh())) { // Sử dụng đối tượng để gọi phương thức
-            JOptionPane.showMessageDialog(this, "Mô hình đã tồn tại !");
-            check = false;
+        PhienBanSanPhamDTO phienBanMoi = getCauHinh();
+
+        if (phienBanMoi == null) {
+            return false;
         }
 
-        return check;
+        if (phienBanBUS.checkDuplicate(danhSachPhienBan, phienBanMoi)) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Phiên bản mô hình đã tồn tại!");
+            return false;
+        }
+
+        return true;
     }
 
-    public void loadDataToTableCauHinh(ArrayList<PhienBanSanPhamDTO> ch) {
-        tblModelch.setRowCount(0); // Xóa hết dữ liệu cũ trong bảng
-        for (int i = 0; i < ch.size(); i++) {
-            // Lấy thông tin từ đối tượng PhienBanSanPhamDTO
-            int gianhap = ch.get(i).getGianhap(); // Giá nhập
-            int giaxuat = ch.get(i).getGiaxuat(); // Giá xuất
+    public void loadDataToTableCauHinh(ArrayList<PhienBanSanPhamDTO> ds) {
 
-            // Thêm thông tin vào bảng (bỏ mausac, tyle và chatlieu)
-            tblModelch.addRow(new Object[] {
-                    gianhap,
-                    giaxuat
+        modelPhienBan.setRowCount(0);
+
+        for (int i = 0; i < ds.size(); i++) {
+
+            PhienBanSanPhamDTO pb = ds.get(i);
+
+            modelPhienBan.addRow(new Object[] {
+                    i + 1,
+                    pb.getMaphienbansp(),
+                    pb.getTenphienban(),
+                    cbxNhanVat.getValue(),
+                    txtTyLe.getText(),
+                    txtChatLieu.getText(),
+                    pb.getGianhap(),
+                    pb.getGiaxuat()
             });
+
         }
     }
 
     public void resetFormCauHinh() {
-        cbxMausac.setSelectedIndex(0); // Đặt lại màu sắc mặc định
-        cbxTyle.setSelectedIndex(0); // Đặt lại tỷ lệ mặc định
-        cbxChatlieu.setSelectedIndex(0); // Đặt lại chất liệu mặc định
-        txtgianhap.setText(""); // Đặt lại giá nhập
-        txtgiaxuat.setText(""); // Đặt lại giá xuất
+
+        if (cbxMauSac != null)
+            cbxMauSac.setSelectedIndex(0);
+        if (cbxTyLe != null)
+            cbxTyLe.setSelectedIndex(0);
+        if (cbxChatLieu != null)
+            cbxChatLieu.setSelectedIndex(0);
+
+        if (txtGiaNhap != null)
+            txtGiaNhap.setText("");
+        if (txtGiaBan != null)
+            txtGiaBan.setText("");
+
+        tblPhienBan.clearSelection();
     }
 
-    public void setInfoCauHinh(PhienBanSanPhamDTO ch) {
-        // Lấy và thiết lập màu sắc, tỷ lệ và chất liệu từ dữ liệu cấu hình
-        txtgianhap.setText(Integer.toString(ch.getGianhap())); // Giá nhập
-        txtgiaxuat.setText(Integer.toString(ch.getGiaxuat())); // Giá xuất
+    public void setInfoCauHinh(PhienBanSanPhamDTO pb) {
+
+        if (pb == null)
+            return;
+
+        txtGiaNhap.setText(String.valueOf(pb.getGianhap()));
+        txtGiaBan.setText(String.valueOf(pb.getGiaxuat()));
+
+        // Nếu phiên bản lưu tên theo tỷ lệ
+        if (cbxTyLe != null) {
+            int index = dacDiemBus.getIndexByTen(pb.getTenphienban());
+            if (index >= 0) {
+                cbxTyLe.setSelectedIndex(index);
+            }
+        }
     }
 
 }

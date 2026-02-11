@@ -184,10 +184,10 @@ public class PhienBanSanPhamDAO {
         int result = 0;
         try {
             Connection con = JDBCUtil.getConnection();
-            String sql = "UPDATE phienbansanpham SET trangthai=0 WHERE maphienbansp=?";
+            String sql = "DELETE FROM phienbansanpham WHERE maphienbansp = ?";
             PreparedStatement pst = con.prepareStatement(sql);
-            pst.setString(1, maphienbansp); // Sử dụng mã phiên bản sản phẩm để đánh dấu xóa
-            result = pst.executeUpdate(); // Chuyển trạng thái thành 0 (đánh dấu xóa)
+            pst.setString(1, maphienbansp);
+            result = pst.executeUpdate();
             JDBCUtil.closeConnection(con);
         } catch (SQLException e) {
             e.printStackTrace();

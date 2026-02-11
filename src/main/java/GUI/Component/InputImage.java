@@ -39,10 +39,18 @@ public class InputImage extends JPanel implements ActionListener {
     }
 
     public void setUrl_img(String url_img) {
-        ImageIcon imgicon = new ImageIcon("./src/img_product/" + url_img);
+
+        if (url_img == null || url_img.isEmpty())
+            return;
+
+        String path = "src/img/img_product/" + url_img; // ✅ đúng folder
+
+        ImageIcon imgicon = new ImageIcon(path);
         imgicon = new ImageIcon(scale(imgicon));
+
         btnChooseImg.setIcon(imgicon);
         btnChooseImg.setText("");
+
         this.url_img = url_img;
     }
 
@@ -69,8 +77,6 @@ public class InputImage extends JPanel implements ActionListener {
             btnChooseImg.setIcon(imgicon);
         }
     }
-
-    
 
     public Image scale(ImageIcon x) {
         int WIDTH = 250;

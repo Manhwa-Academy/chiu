@@ -21,6 +21,32 @@ public class CharacterBUS {
         return this.listCharacter.get(index);
     }
 
+    public String[] getArrTenNhanVat() {
+
+        ArrayList<CharacterDTO> ds = this.getAll();
+
+        String[] arr = new String[ds.size()];
+
+        for (int i = 0; i < ds.size(); i++) {
+            arr[i] = ds.get(i).getTencharacter();
+        }
+
+        return arr;
+    }
+
+    public int getIndexByTen(String ten) {
+
+        ArrayList<CharacterDTO> ds = this.getAll();
+
+        for (int i = 0; i < ds.size(); i++) {
+            if (ds.get(i).getTencharacter().equalsIgnoreCase(ten)) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
     public int getIndexById(int macharacter) {
         for (int i = 0; i < listCharacter.size(); i++) {
             if (listCharacter.get(i).getMacharacter() == macharacter) {

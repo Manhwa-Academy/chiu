@@ -2,34 +2,30 @@ package config;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import javax.swing.JOptionPane;
 
 public class JDBCUtil {
 
+    private static final String URL = "jdbc:mysql://localhost:3306/quanlikhohang?useSSL=false&serverTimezone=UTC";
+    private static final String USER = "root";
+    private static final String PASSWORD = "";
+
     public static Connection getConnection() {
-        Connection result = null;
+
         try {
-            // Dang ky MySQL Driver voi DriverManager
-            DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
-            //Cac thong so
-            String url = "jdbc:mySQL://localhost:3306/quanlikhohang";
-            String userName = "root";
-            String password = "";
-            //Tao ket noi 
-            result = DriverManager.getConnection(url, userName, password);
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            return DriverManager.getConnection(URL, USER, PASSWORD);
+
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Không thể kết nối đến cơ sở dữ liệu !", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace(); // in lỗi thật ra console
+            return null;
         }
-        return result;
     }
 
     public static void closeConnection(Connection c) {
         try {
-            if (c != null) {
+            if (c != null)
                 c.close();
-            }
         } catch (Exception e) {
-         
             e.printStackTrace();
         }
     }

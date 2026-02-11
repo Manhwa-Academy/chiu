@@ -64,9 +64,9 @@ public class PhieuNhapDAO implements DAOinterface<PhieuNhapDTO> {
     public int delete(String t) {
         int result = 0;
         try {
-            Connection con = (Connection) JDBCUtil.getConnection();
-            String sql = "UPDATE phieunhap SET trangthai = 0 WHERE maphieunhap = ?";
-            PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
+            Connection con = JDBCUtil.getConnection();
+            String sql = "DELETE FROM phieunhap WHERE maphieunhap = ?";
+            PreparedStatement pst = con.prepareStatement(sql);
             pst.setString(1, t);
             result = pst.executeUpdate();
             JDBCUtil.closeConnection(con);

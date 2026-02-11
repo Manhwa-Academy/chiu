@@ -139,9 +139,9 @@ public class TaiKhoanDAO implements DAOinterface<TaiKhoanDTO> {
     public int delete(String t) {
         int result = 0;
         try {
-            Connection con = (Connection) JDBCUtil.getConnection();
-            String sql = "UPDATE `taikhoan` SET `trangthai`='-1' where manv = ?";
-            PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
+            Connection con = JDBCUtil.getConnection();
+            String sql = "DELETE FROM `taikhoan` WHERE manv = ?";
+            PreparedStatement pst = con.prepareStatement(sql);
             pst.setInt(1, Integer.parseInt(t));
             result = pst.executeUpdate();
             JDBCUtil.closeConnection(con);

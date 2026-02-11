@@ -13,7 +13,7 @@ public class KhuVucKhoBUS {
     public KhuVucKhoBUS getInstance() {
         return new KhuVucKhoBUS();
     }
-    
+
     public KhuVucKhoBUS() {
         listKVK = kvkDAO.selectAll();
     }
@@ -24,6 +24,19 @@ public class KhuVucKhoBUS {
 
     public KhuVucKhoDTO getByIndex(int index) {
         return this.listKVK.get(index);
+    }
+
+    public int getIndexByMaKhuVuc(int maKhuVuc) {
+
+        ArrayList<KhuVucKhoDTO> ds = this.getAll();
+
+        for (int i = 0; i < ds.size(); i++) {
+            if (ds.get(i).getMakhuvuc() == maKhuVuc) {
+                return i;
+            }
+        }
+
+        return -1;
     }
 
     public int getIndexByMaLH(int makhuvuc) {
@@ -83,7 +96,8 @@ public class KhuVucKhoBUS {
         switch (type) {
             case "Tất cả" -> {
                 for (KhuVucKhoDTO i : listKVK) {
-                    if (Integer.toString(i.getMakhuvuc()).contains(txt) || i.getTenkhuvuc().toLowerCase().contains(txt)){
+                    if (Integer.toString(i.getMakhuvuc()).contains(txt)
+                            || i.getTenkhuvuc().toLowerCase().contains(txt)) {
                         result.add(i);
                     }
                 }
@@ -105,16 +119,16 @@ public class KhuVucKhoBUS {
         }
         return result;
     }
-    
+
     public String[] getArrTenKhuVuc() {
         int size = listKVK.size();
         String[] result = new String[size];
-        for(int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             result[i] = listKVK.get(i).getTenkhuvuc();
         }
         return result;
     }
-    
+
     public String getTenKhuVuc(int makhuvuc) {
         return this.listKVK.get(this.getIndexByMaKVK(makhuvuc)).getTenkhuvuc();
     }

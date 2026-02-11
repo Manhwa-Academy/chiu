@@ -29,6 +29,19 @@ public class SeriesBUS {
         return this.listSeries.get(index); // Đổi từ listHeDieuHanh thành listSeries
     }
 
+    public int getIndexByTenSeries(String tenSeries) {
+
+        ArrayList<SeriesDTO> ds = this.getAll();
+
+        for (int i = 0; i < ds.size(); i++) {
+            if (ds.get(i).getTenSeries().equalsIgnoreCase(tenSeries)) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
     public boolean add(SeriesDTO series) { // Đổi từ HeDieuHanhDTO thành SeriesDTO
         boolean check = seriesDAO.insert(series) != 0; // Đổi từ hdhDAO.insert thành seriesDAO.insert
         if (check) {
