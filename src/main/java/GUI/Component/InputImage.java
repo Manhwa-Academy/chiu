@@ -43,9 +43,17 @@ public class InputImage extends JPanel implements ActionListener {
         if (url_img == null || url_img.isEmpty())
             return;
 
-        String path = "src/img/img_product/" + url_img; // ✅ đúng folder
+        String path = "/img/products/" + url_img;
 
-        ImageIcon imgicon = new ImageIcon(path);
+        java.net.URL location = getClass().getResource(path);
+
+        if (location == null) {
+            System.out.println("Không tìm thấy ảnh: " + path);
+            btnChooseImg.setText("No Image");
+            return;
+        }
+
+        ImageIcon imgicon = new ImageIcon(location);
         imgicon = new ImageIcon(scale(imgicon));
 
         btnChooseImg.setIcon(imgicon);

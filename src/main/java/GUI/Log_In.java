@@ -199,72 +199,71 @@ public class Log_In extends JFrame implements KeyListener {
 
     private void loginWithGoogle() {
         try {
-            // Lấy thông tin người dùng từ Google
             String result = GoogleLoginUtil.login();
             if (result == null || result.isEmpty())
                 return;
 
             String[] data = result.split("\\|");
-            String name = data[0]; // Tên người dùng
-            String email = data[1]; // Email người dùng
-            String pictureUrl = data[2]; // URL ảnh đại diện từ Google
+            String name = data[0];
+            String email = data[1];
+            String pictureUrl = data[2];
 
-            // Kiểm tra xem email đã tồn tại trong hệ thống chưa
+            // 1️⃣ Kiểm tra nhân viên
             NhanVienDTO nv = NhanVienDAO.getInstance().selectByEmail(email);
 
             if (nv == null) {
-                // Nếu email chưa tồn tại, tạo mới nhân viên
-                NhanVienDTO newNhanVien = new NhanVienDTO();
-                newNhanVien.setHoten(name); // Cập nhật tên nhân viên
-                newNhanVien.setEmail(email); // Cập nhật email
-                newNhanVien.setTrangthai(1); // Trạng thái: hoạt động
+                // Tạo nhân viên mới
+                NhanVienDTO newNV = new NhanVienDTO();
+                newNV.setHoten(name);
+                newNV.setEmail(email);
+                newNV.setTrangthai(1);
+                newNV.setSdt("0000000000");
+                newNV.setNgaysinh(Date.valueOf("2000-01-01"));
+                newNV.setAvatar(pictureUrl);
 
-                // Gán giá trị mặc định cho số điện thoại nếu không có từ Google
-                newNhanVien.setSdt("0000000000");
-
-                // Gán giá trị mặc định cho ngày sinh nếu không có từ Google
-                newNhanVien.setNgaysinh(Date.valueOf("2000-01-01"));
-
-                // Lưu URL ảnh đại diện từ Google
-                newNhanVien.setAvatar(pictureUrl);
-
-                // Thêm nhân viên mới vào cơ sở dữ liệu
-                int insertResult = NhanVienDAO.getInstance().insert(newNhanVien);
-                if (insertResult == 0) {
-                    JOptionPane.showMessageDialog(this, "Không thể tạo tài khoản nhân viên mới", "Lỗi",
+                if (NhanVienDAO.getInstance().insert(newNV) == 0) {
+                    JOptionPane.showMessageDialog(this, "Không thể tạo nhân viên", "Lỗi",
                             JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
-                // Sau khi tạo nhân viên, tiếp tục tạo tài khoản
                 nv = NhanVienDAO.getInstance().selectByEmail(email);
-
-                TaiKhoanDTO tk = new TaiKhoanDTO();
-                tk.setManv(nv.getManv());
-                tk.setUsername(email);
-                tk.setMatkhau(BCrypt.hashpw("GOOGLE_LOGIN", BCrypt.gensalt())); // Mật khẩu mặc định
-                tk.setManhomquyen(1); // Quyền mặc định
-                tk.setTrangthai(1); // Tài khoản hoạt động
-                tk.setOtp(null); // Không cần OTP
-
-                TaiKhoanDAO.getInstance().insert(tk); // Thêm tài khoản vào cơ sở dữ liệu
             }
 
-            // Kiểm tra trạng thái tài khoản
+            // 2️⃣ Kiểm tra tài khoản tồn tại chưa
             TaiKhoanDTO tk = TaiKhoanDAO.getInstance().selectByManv(nv.getManv());
+
+            if (tk == null) {
+                // Tạo tài khoản nếu chưa có
+                TaiKhoanDTO newTK = new TaiKhoanDTO();
+                newTK.setManv(nv.getManv());
+                newTK.setUsername(email);
+                newTK.setMatkhau(BCrypt.hashpw("GOOGLE_LOGIN", BCrypt.gensalt()));
+                newTK.setManhomquyen(4);
+                newTK.setTrangthai(1);
+
+                if (TaiKhoanDAO.getInstance().insert(newTK) == 0) {
+                    JOptionPane.showMessageDialog(this, "Không thể tạo tài khoản", "Lỗi",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                tk = newTK;
+            }
+
             if (tk.getTrangthai() == 0) {
-                JOptionPane.showMessageDialog(this, "Tài khoản của bạn đang bị khóa", "Cảnh báo",
+                JOptionPane.showMessageDialog(this, "Tài khoản bị khóa", "Cảnh báo",
                         JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
-            // Đăng nhập thành công, chuyển đến trang chính
             this.dispose();
             Main main = new Main(tk);
             main.setVisible(true);
 
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Đăng nhập Google thất bại", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Đăng nhập Google thất bại", "Lỗi",
+                    JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
         }
     }

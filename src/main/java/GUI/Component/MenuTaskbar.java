@@ -45,6 +45,7 @@ import GUI.Panel.PhieuNhap;
 import GUI.Panel.PhieuXuat;
 import GUI.Panel.QuanLyThuocTinhSP;
 import GUI.Panel.SanPham;
+import GUI.Panel.SanPhamKhachHang;
 import GUI.Panel.TaiKhoan;
 import GUI.Panel.TrangChu;
 import GUI.Panel.ThongKe.ThongKe;
@@ -179,10 +180,20 @@ public class MenuTaskbar extends JPanel {
                 listitem[i] = new itemTaskbar(getSt[i][1], getSt[i][0]);
                 pnlCenter.add(listitem[i]);
                 if (i != 0) {
-                    if (!checkRole(getSt[i][2])) {
+
+                    // Nếu là khách hàng và là mục "sanpham" thì luôn hiển thị
+                    if (user != null
+                            && user.getManhomquyen() == 4
+                            && getSt[i][2].equals("sanpham")) {
+
+                        listitem[i].setVisible(true);
+
+                    } else if (!checkRole(getSt[i][2])) {
+
                         listitem[i].setVisible(false);
                     }
                 }
+
             }
         }
 
@@ -211,11 +222,17 @@ public class MenuTaskbar extends JPanel {
         listitem[1].addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent evt) {
-                sanPham = new SanPham(main);
-                main.setPanel(sanPham);
 
+                if (user.getManhomquyen() == 4) {
+                    SanPhamKhachHang spKH = new SanPhamKhachHang(main, user);
+                    main.setPanel(spKH);
+                } else {
+                    sanPham = new SanPham(main);
+                    main.setPanel(sanPham);
+                }
             }
         });
+
         listitem[2].addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent evt) {

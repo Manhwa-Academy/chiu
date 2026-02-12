@@ -158,6 +158,7 @@ C:\Users\vuliz\Music\quan_ly_ban_mo_hinh\src\main\java\GUI\Panel\PhieuNhap.java
 C:\Users\vuliz\Music\quan_ly_ban_mo_hinh\src\main\java\GUI\Panel\PhieuXuat.java
 C:\Users\vuliz\Music\quan_ly_ban_mo_hinh\src\main\java\GUI\Panel\QuanLyThuocTinhSP.java
 C:\Users\vuliz\Music\quan_ly_ban_mo_hinh\src\main\java\GUI\Panel\SanPham.java
+C:\Users\vuliz\Music\quan_ly_ban_mo_hinh\src\main\java\GUI\Panel\SanPhamKhachHang.java
 C:\Users\vuliz\Music\quan_ly_ban_mo_hinh\src\main\java\GUI\Panel\TaiKhoan.java
 C:\Users\vuliz\Music\quan_ly_ban_mo_hinh\src\main\java\GUI\Panel\TaoPhieuKiemKe.java
 C:\Users\vuliz\Music\quan_ly_ban_mo_hinh\src\main\java\GUI\Panel\TaoPhieuNhap.java
@@ -176,6 +177,7 @@ C:\Users\vuliz\Music\quan_ly_ban_mo_hinh\src\main\java\GUI\Panel\ThongKeBackUp.j
 C:\Users\vuliz\Music\quan_ly_ban_mo_hinh\src\main\java\GUI\Panel\TrangChu.java
 C:\Users\vuliz\Music\quan_ly_ban_mo_hinh\src\main\java\helper\BCrypt.java
 C:\Users\vuliz\Music\quan_ly_ban_mo_hinh\src\main\java\helper\Formater.java
+C:\Users\vuliz\Music\quan_ly_ban_mo_hinh\src\main\java\helper\ImeiGenerator.java
 C:\Users\vuliz\Music\quan_ly_ban_mo_hinh\src\main\java\helper\JTableExporter.java
 C:\Users\vuliz\Music\quan_ly_ban_mo_hinh\src\main\java\helper\SendEmailSMTP.java
 C:\Users\vuliz\Music\quan_ly_ban_mo_hinh\src\main\java\helper\Validation.java

@@ -45,18 +45,24 @@ public class ChiTietSanPhamDAO implements DAOinterface<ChiTietSanPhamDTO> {
     }
 
     public boolean checkImeiExists(String imei) {
+
         boolean exists = false;
-        try {
-            String sql = "SELECT 1 FROM ctsanpham WHERE maimei = ?";
-            PreparedStatement pst = (PreparedStatement) JDBCUtil.getConnection().prepareStatement(sql);
+
+        String sql = "SELECT 1 FROM ctsanpham WHERE maimei = ? LIMIT 1";
+
+        try (Connection con = JDBCUtil.getConnection();
+                PreparedStatement pst = con.prepareStatement(sql)) {
+
             pst.setString(1, imei);
+
             ResultSet rs = pst.executeQuery();
-            exists = rs.next(); // if a result is found, imei exists
-            rs.close();
-            pst.close();
-        } catch (SQLException e) {
+
+            exists = rs.next();
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
+
         return exists;
     }
 

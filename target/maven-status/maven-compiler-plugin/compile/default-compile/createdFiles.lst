@@ -57,6 +57,7 @@ BUS\CategoryBUS.class
 DTO\ThuocTinhSanPham\ThuongHieuDTO.class
 GUI\Component\SelectForm.class
 GUI\Component\Chart\CurveChart\LabelColor2.class
+GUI\Panel\SanPhamKhachHang.class
 BUS\TaiKhoanBUS.class
 GUI\Panel\ThongKe\ThongKeTonKho$1.class
 GUI\Component\Chart\CurveChart\BlankChart\BlankPlotChart.class
@@ -174,6 +175,7 @@ GUI\Dialog\SanPhamDialog$InputForm.class
 GUI\Dialog\PhieuKiemKeDialog$3.class
 GUI\Panel\ThongKe\ThongKeNhaCungCap.class
 DTO\PhieuNhapDTO.class
+helper\ImeiGenerator.class
 DTO\PhieuDTO.class
 DAO\ChiTietPhieuNhapDAO.class
 DTO\ThongKe\ThongKeNhaCungCapDTO.class
@@ -199,6 +201,7 @@ GUI\Component\MenuTaskbar$7.class
 DAO\ChiTietInterface.class
 GUI\GoogleLoginUtil.class
 GUI\Component\PanelShadow.class
+BUS\TaiKhoanBUS$RoleConstant.class
 GUI\Component\Chart\BarChart\BlankChart\BlankPlotChart.class
 GUI\Panel\PhieuKiemKe.class
 GUI\Component\ButtonCustom.class
@@ -230,6 +233,7 @@ GUI\Component\MenuTaskbar$14.class
 GUI\Dialog\ListNhanVien$1.class
 GUI\Component\Chart\BarChart\Chart$1.class
 GUI\Component\Chart\CurveChart\ModelChart2.class
+GUI\Dialog\SanPhamDialog$SelectForm.class
 GUI\Dialog\ThuocTinhSanPham\XuatXuDialog.class
 DAO\XuatXuDAO.class
 GUI\Panel\TaoPhieuXuat$1.class

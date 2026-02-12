@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 
 import java.util.Random;
@@ -478,23 +479,24 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
 
         File sourceFile = new File(urlImg);
 
-        String destPath = "src/img/img_product"; // sửa lại
+        // lấy đường dẫn tuyệt đối của resource folder
+        String destPath = "src/main/resources/img/products";
         File destFolder = new File(destPath);
 
         if (!destFolder.exists()) {
             destFolder.mkdirs();
         }
 
-        String newName = ram + sourceFile.getName();
+        String newName = ram + "_" + sourceFile.getName();
 
         try {
             Path dest = Paths.get(destFolder.getPath(), newName);
-            Files.copy(sourceFile.toPath(), dest);
+            Files.copy(sourceFile.toPath(), dest, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return newName;
+        return newName; // lưu tên file vào DB
     }
 
     @Override

@@ -178,6 +178,35 @@ public class PhienBanSanPhamDAO {
         return result;
     }
 
+    public int getMinPriceByMaSP(int masp) {
+
+        int result = 0;
+
+        String sql = """
+                    SELECT MIN(giaxuat) AS minPrice
+                    FROM phienbansanpham
+                    WHERE masp = ?
+                    AND trangthai = 1
+                """;
+
+        try (Connection con = JDBCUtil.getConnection();
+                PreparedStatement pst = con.prepareStatement(sql)) {
+
+            pst.setInt(1, masp);
+
+            ResultSet rs = pst.executeQuery();
+
+            if (rs.next()) {
+                result = rs.getInt("minPrice");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
     /* ================= DELETE ================= */
 
     public int delete(String maphienbansp) {

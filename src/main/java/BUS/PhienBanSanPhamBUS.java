@@ -17,6 +17,10 @@ public class PhienBanSanPhamBUS {
         return pbDAO.selectAll(String.valueOf(masp));
     }
 
+    public int getGiaThapNhatByMaSP(int masp) {
+        return pbDAO.getMinPriceByMaSP(masp);
+    }
+
     /* ================= LẤY PHIÊN BẢN THEO MÃ ================= */
 
     public PhienBanSanPhamDTO getByMaPhienBan(int mapb) {

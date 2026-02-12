@@ -10,6 +10,7 @@ public class TaiKhoanDTO {
     private int manhomquyen;
     private int trangthai;
     private String otp;
+    private Integer makh;
 
     public TaiKhoanDTO() {
 
@@ -37,6 +38,14 @@ public class TaiKhoanDTO {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public Integer getMakh() {
+        return makh;
+    }
+
+    public void setMakh(Integer makh) {
+        this.makh = makh;
     }
 
     public String getMatkhau() {

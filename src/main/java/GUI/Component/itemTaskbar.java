@@ -11,8 +11,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import java.awt.BorderLayout;
+
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.border.EmptyBorder;
+import java.net.URL;
 
 public class itemTaskbar extends JPanel implements MouseListener {
 
@@ -67,39 +70,48 @@ public class itemTaskbar extends JPanel implements MouseListener {
 
     public itemTaskbar(String linkImg, String tenSP, int soLuong) {
 
-        this.setLayout(new BorderLayout(0, 0));
-        this.setPreferredSize(new Dimension(380, 60));
+        this.setLayout(new BorderLayout(10, 5));
+        this.setPreferredSize(new Dimension(350, 70));
+        this.setMaximumSize(new Dimension(350, 70));
         this.setBackground(Color.white);
+        this.setBorder(new EmptyBorder(5, 5, 5, 5));
 
-        img = new JLabel("");
+        // ===== IMAGE =====
+        img = new JLabel();
+        img.setPreferredSize(new Dimension(60, 60));
 
-        String path = "src/img/img_product/" + linkImg;
-        ImageIcon icon = new ImageIcon(path);
+        String resourcePath = "img/products/" + linkImg.trim();
+        URL url = getClass().getClassLoader().getResource(resourcePath);
 
-        // Debug nếu ảnh không tồn tại
-        if (icon.getIconWidth() == -1) {
-            System.out.println("Không tìm thấy ảnh: " + path);
+        System.out.println("Loading image: " + resourcePath);
+        System.out.println("URL: " + url);
+
+        if (url != null) {
+            ImageIcon icon = new ImageIcon(url);
+            img.setIcon(new ImageIcon(
+                    icon.getImage().getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH)));
+        } else {
+            img.setText("No Img");
+            img.setHorizontalAlignment(JLabel.CENTER);
         }
 
-        img.setIcon(InputImage.resizeImage(icon, 38));
         this.add(img, BorderLayout.WEST);
 
-        right = new JPanel();
-        right.setLayout(new FlowLayout(0, 0, 0));
-        right.setBorder(new EmptyBorder(10, 10, 0, 0));
-        right.setOpaque(false);
-        this.add(right, BorderLayout.CENTER);
+        // ===== TEXT =====
+        JPanel textPanel = new JPanel();
+        textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
+        textPanel.setOpaque(false);
 
-        pnlContent = new JLabel(tenSP);
-        pnlContent.putClientProperty("FlatLaf.style", "font: 120% $semibold.font");
-        pnlContent.setForeground(Color.black);
-        right.add(pnlContent);
+        JLabel lblName = new JLabel(tenSP);
+        lblName.setFont(lblName.getFont().deriveFont(14f));
 
-        pnlSoLuong = new JLabel("Số lượng: " + soLuong);
-        pnlSoLuong.setPreferredSize(new Dimension(350, 20));
-        pnlSoLuong.putClientProperty("FlatLaf.style", "font: 100% $medium.font");
-        pnlSoLuong.setForeground(Color.gray);
-        right.add(pnlSoLuong);
+        JLabel lblQty = new JLabel("Số lượng: " + soLuong);
+        lblQty.setForeground(Color.GRAY);
+
+        textPanel.add(lblName);
+        textPanel.add(lblQty);
+
+        this.add(textPanel, BorderLayout.CENTER);
     }
 
     public itemTaskbar(String linkIcon, String content, String content2, int n) {

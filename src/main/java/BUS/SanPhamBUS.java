@@ -27,7 +27,7 @@ public class SanPhamBUS {
     public SanPhamDTO getByMaSP(int masp) {
         int vitri = -1;
         int i = 0;
-        while (i <= this.listSP.size() && vitri == -1) {
+        while (i < this.listSP.size() && vitri == -1) {
             if (this.listSP.get(i).getMasp() == masp) {
                 vitri = i;
             } else {
@@ -87,8 +87,10 @@ public class SanPhamBUS {
     }
 
     public ArrayList<SanPhamDTO> getByMakhuvuc(int makv) {
+        listSP = spDAO.selectAll(); // reload
+
         ArrayList<SanPhamDTO> result = new ArrayList<>();
-        for (SanPhamDTO i : this.listSP) {
+        for (SanPhamDTO i : listSP) {
             if (i.getKhuvuckho() == makv) {
                 result.add(i);
             }
@@ -120,6 +122,30 @@ public class SanPhamBUS {
             }
         }
         return n;
+    }
+
+    public boolean updateSoLuongTon(int masp, int soLuongThayDoi) {
+
+        int index = getIndexByMaSP(masp);
+
+        if (index == -1)
+            return false;
+
+        SanPhamDTO sp = listSP.get(index);
+
+        int newQuantity = sp.getSoluongton() + soLuongThayDoi;
+
+        if (newQuantity < 0)
+            return false;
+
+        boolean success = spDAO.updateSoLuongTon(masp, soLuongThayDoi) > 0;
+
+        if (success) {
+            sp.setSoluongton(newQuantity); // cập nhật lại trong bộ nhớ
+            listSP.set(index, sp);
+        }
+
+        return success;
     }
 
 }

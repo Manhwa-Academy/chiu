@@ -21,16 +21,21 @@ public class TaiKhoanDAO implements DAOinterface<TaiKhoanDTO> {
     public int insert(TaiKhoanDTO t) {
         int result = 0;
         try {
-            Connection con = (Connection) JDBCUtil.getConnection();
+            Connection con = JDBCUtil.getConnection();
             String sql = "INSERT INTO `taikhoan`(`manv`,`tendangnhap`,`matkhau`,`manhomquyen`,`trangthai`) VALUES (?,?,?,?,?)";
-            PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
+            PreparedStatement pst = con.prepareStatement(sql);
+
             pst.setInt(1, t.getManv());
             pst.setString(2, t.getUsername());
             pst.setString(3, t.getMatkhau());
-            pst.setInt(4, t.getManhomquyen());
-            pst.setInt(5, t.getTrangthai());
+
+            // ⭐ BẮT BUỘC PHẢI CÓ
+            pst.setInt(4, t.getManhomquyen() == 0 ? 4 : t.getManhomquyen());
+            pst.setInt(5, t.getTrangthai() == 0 ? 1 : t.getTrangthai());
+
             result = pst.executeUpdate();
             JDBCUtil.closeConnection(con);
+
         } catch (SQLException ex) {
             Logger.getLogger(TaiKhoanDAO.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -126,6 +126,31 @@ public class KhachHangDAO implements DAOinterface<KhachHangDTO> {
         }
         return result;
     }
+public KhachHangDTO selectByEmail(String email) {
+    KhachHangDTO result = null;
+    try {
+        Connection con = JDBCUtil.getConnection();
+        String sql = "SELECT * FROM khachhang WHERE email=?";
+        PreparedStatement pst = con.prepareStatement(sql);
+        pst.setString(1, email);
+        ResultSet rs = pst.executeQuery();
+
+        while (rs.next()) {
+            result = new KhachHangDTO(
+                    rs.getInt("makh"),
+                    rs.getString("tenkhachhang"),
+                    rs.getString("sdt"),
+                    rs.getString("diachi"),
+                    rs.getTimestamp("ngaythamgia")
+            );
+        }
+
+        JDBCUtil.closeConnection(con);
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return result;
+}
 
     public int deleteMultiple(ArrayList<KhachHangDTO> customers) {
         int result = 0;

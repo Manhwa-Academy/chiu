@@ -117,30 +117,41 @@ public class SanPhamDAO implements DAOinterface<SanPhamDTO> {
 
     @Override
     public int delete(String id) {
-
         int result = 0;
 
-        try (Connection con = JDBCUtil.getConnection()) {
+        Connection con = null;
 
-            con.setAutoCommit(false); // Bắt đầu transaction
+        try {
+            con = JDBCUtil.getConnection();
+            con.setAutoCommit(false);
 
-            // 1️⃣ Xóa toàn bộ phiên bản thuộc sản phẩm
             String sqlPhienBan = "DELETE FROM phienbansanpham WHERE masp = ?";
             PreparedStatement pstPB = con.prepareStatement(sqlPhienBan);
             pstPB.setString(1, id);
             pstPB.executeUpdate();
 
-            // 2️⃣ Xóa sản phẩm
             String sqlSanPham = "DELETE FROM sanpham WHERE masp = ?";
             PreparedStatement pstSP = con.prepareStatement(sqlSanPham);
             pstSP.setString(1, id);
             result = pstSP.executeUpdate();
 
-            con.commit(); // Thành công
+            con.commit();
 
         } catch (SQLException ex) {
-            Logger.getLogger(SanPhamDAO.class.getName())
-                    .log(Level.SEVERE, null, ex);
+            try {
+                if (con != null)
+                    con.rollback();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (con != null)
+                    con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
 
         return result;
@@ -290,21 +301,28 @@ public class SanPhamDAO implements DAOinterface<SanPhamDTO> {
         return result;
     }
 
-    public int updateSoLuongTon(int masp, int soluong) {
-        int quantity_current = this.selectById(Integer.toString(masp)).getSoluongton();
+    public int updateSoLuongTon(int masp, int soLuongThayDoi) {
+
         int result = 0;
-        int quantity_change = quantity_current + soluong;
+
         try {
-            Connection con = (Connection) JDBCUtil.getConnection();
-            String sql = "UPDATE `sanpham` SET `soluongton`=? WHERE masp = ?";
-            PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
-            pst.setInt(1, quantity_change);
+            Connection con = JDBCUtil.getConnection();
+
+            String sql = "UPDATE sanpham SET soluongton = soluongton + ? WHERE masp = ?";
+            PreparedStatement pst = con.prepareStatement(sql);
+
+            pst.setInt(1, soLuongThayDoi);
             pst.setInt(2, masp);
+
             result = pst.executeUpdate();
+
             JDBCUtil.closeConnection(con);
-        } catch (SQLException ex) {
-            Logger.getLogger(SanPhamDAO.class.getName()).log(Level.SEVERE, null, ex);
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
         return result;
     }
+
 }

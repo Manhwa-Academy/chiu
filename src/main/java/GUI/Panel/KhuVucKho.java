@@ -30,7 +30,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -41,7 +40,7 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import com.formdev.flatlaf.extras.FlatSVGIcon;
+
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 
 import BUS.KhuVucKhoBUS;
@@ -99,7 +98,14 @@ public class KhuVucKho extends JPanel implements ActionListener, ItemListener {
             public void mousePressed(MouseEvent e) {
                 int index = tableKhuvuc.getSelectedRow();
                 if (index != -1) {
-                    ArrayList<SanPhamDTO> listSP = spBUS.getByMakhuvuc(listKVK.get(index).getMakhuvuc());
+
+                    int makv = listKVK.get(index).getMakhuvuc();
+                    System.out.println("Makhuvuc click: " + makv);
+
+                    ArrayList<SanPhamDTO> listSP = spBUS.getByMakhuvuc(makv);
+
+                    System.out.println("Sản phẩm tìm được: " + listSP.size());
+
                     ListCustomersInDePot(listSP);
                 }
             }
@@ -244,32 +250,45 @@ public class KhuVucKho extends JPanel implements ActionListener, ItemListener {
     // }
     // }
     public void ListCustomersInDePot(ArrayList<SanPhamDTO> result) {
+
         right.removeAll();
+
+        right.setLayout(new BoxLayout(right, BoxLayout.Y_AXIS)); // QUAN TRỌNG
+        right.setBackground(BackgroundColor);
+
         JLabel tit = new JLabel("Danh sách sản phẩm đang có ở khu vực");
         tit.setFont(new java.awt.Font(FlatRobotoFont.FAMILY, 1, 16));
+        tit.setAlignmentX(LEFT_ALIGNMENT);
+
         right.add(tit);
-        itemTaskbar listItem[] = new itemTaskbar[result.size()];
-        int i = 0;
+        right.add(new JLabel(" ")); // spacer
+
+        System.out.println("Số sản phẩm nhận được: " + result.size());
+
         for (SanPhamDTO sp : result) {
-            if (sp.getSoluongton() != 0) {
-                listItem[i] = new itemTaskbar(sp.getHinhanh(), sp.getTensp(), sp.getSoluongton());
-                right.add(listItem[i]);
-                i++;
-            }
+
+            System.out.println("Render SP: " + sp.getTensp());
+            System.out.println("Số lượng tồn: " + sp.getSoluongton());
+
+            // KHÔNG chặn số lượng nữa
+            itemTaskbar item = new itemTaskbar(
+                    sp.getHinhanh(),
+                    sp.getTensp(),
+                    sp.getSoluongton());
+
+            item.setAlignmentX(LEFT_ALIGNMENT);
+            right.add(item);
+            right.add(new JLabel(" ")); // spacer
         }
 
-        if (i == 0) {
-            if (result.isEmpty()) {
-                JLabel lblIcon = new JLabel("Không có sản phẩm");
-                lblIcon.setPreferredSize(new Dimension(380, 300));
-                lblIcon.setIcon(new FlatSVGIcon("./icon/null.svg"));
-                lblIcon.setHorizontalTextPosition(SwingConstants.CENTER);
-                lblIcon.setVerticalTextPosition(SwingConstants.TOP);
-                right.add(lblIcon);
-            }
+        if (result.isEmpty()) {
+            JLabel lbl = new JLabel("Không có sản phẩm");
+            lbl.setAlignmentX(LEFT_ALIGNMENT);
+            right.add(lbl);
         }
+
+        right.revalidate();
         right.repaint();
-        right.validate();
     }
 
     public int getRowSelected() {
