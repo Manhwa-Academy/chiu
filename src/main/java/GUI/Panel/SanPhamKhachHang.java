@@ -8,8 +8,6 @@ import BUS.SanPhamBUS;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.net.URL;
 
@@ -17,9 +15,14 @@ public class SanPhamKhachHang extends JPanel {
 
     private SanPhamBUS spBUS;
     private JPanel productContainer;
+    private TaiKhoanDTO user;
+
 
     public SanPhamKhachHang(Main main, TaiKhoanDTO user) {
+
         this.spBUS = new SanPhamBUS();
+        this.user = user;
+
         initComponent();
         loadProducts();
     }
@@ -29,17 +32,42 @@ public class SanPhamKhachHang extends JPanel {
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
 
+        // ===== TOP PANEL =====
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.setBackground(Color.WHITE);
+
         JLabel title = new JLabel("DANH SÁCH SẢN PHẨM", JLabel.CENTER);
         title.setFont(new Font("Segoe UI", Font.BOLD, 24));
         title.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
-        add(title, BorderLayout.NORTH);
 
+        JButton btnCart = new JButton("GIỎ HÀNG");
+        btnCart.setBackground(new Color(0, 150, 255));
+        btnCart.setForeground(Color.WHITE);
+        btnCart.setFocusPainted(false);
+
+        btnCart.addActionListener(e -> {
+            new GioHangFrame(user);
+            refreshProducts(); // 🔥 sau khi thanh toán refresh lại tồn kho
+        });
+
+        topPanel.add(title, BorderLayout.CENTER);
+        topPanel.add(btnCart, BorderLayout.EAST);
+
+        add(topPanel, BorderLayout.NORTH);
+
+        // ===== PRODUCT CONTAINER =====
         productContainer = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 20));
         productContainer.setBackground(Color.WHITE);
 
         JScrollPane scrollPane = new JScrollPane(productContainer);
         scrollPane.setBorder(null);
+
         add(scrollPane, BorderLayout.CENTER);
+    }
+
+    public void refreshProducts() {
+        this.spBUS = new SanPhamBUS(); // reload lại dữ liệu từ DB
+        loadProducts();
     }
 
     private void loadProducts() {
@@ -65,17 +93,8 @@ public class SanPhamKhachHang extends JPanel {
         card.setLayout(new BorderLayout());
         card.setBackground(Color.WHITE);
         card.setBorder(BorderFactory.createLineBorder(new Color(220, 220, 220)));
-        card.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        // ===== CLICK XEM CHI TIẾT =====
-        card.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                new ProductDetailFrame(sp);
-            }
-        });
-
-        // ================= IMAGE =================
+        // ===== IMAGE =====
         JLabel lblImage = new JLabel();
         lblImage.setHorizontalAlignment(JLabel.CENTER);
 
@@ -97,7 +116,7 @@ public class SanPhamKhachHang extends JPanel {
 
         card.add(lblImage, BorderLayout.NORTH);
 
-        // ================= INFO =================
+        // ===== INFO PANEL =====
         JPanel infoPanel = new JPanel();
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
         infoPanel.setBackground(Color.WHITE);
@@ -109,7 +128,7 @@ public class SanPhamKhachHang extends JPanel {
         JLabel lblSeries = new JLabel(sp.getSeries());
         lblSeries.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 
-        // ===== LẤY GIÁ TỪ PHIÊN BẢN =====
+        // ===== GIÁ =====
         int gia = 0;
         try {
             PhienBanSanPhamBUS pbBUS = new PhienBanSanPhamBUS();
@@ -121,23 +140,17 @@ public class SanPhamKhachHang extends JPanel {
         lblPrice.setForeground(Color.RED);
         lblPrice.setFont(new Font("Segoe UI", Font.BOLD, 14));
 
-        // ===== SỐ LƯỢNG =====
-        JLabel lblStock;
-        if (sp.getSoluongton() > 0) {
-            lblStock = new JLabel("Còn: " + sp.getSoluongton());
-            lblStock.setForeground(new Color(0, 150, 0));
-        } else {
-            lblStock = new JLabel("Hết hàng");
-            lblStock.setForeground(Color.GRAY);
-        }
+        JLabel lblStock = new JLabel("Còn: " + sp.getSoluongton());
+        lblStock.setForeground(new Color(0, 150, 0));
 
-        JButton btnBuy = new JButton("Mua");
-        btnBuy.setBackground(new Color(255, 87, 34));
-        btnBuy.setForeground(Color.WHITE);
+        // ===== BUTTON DETAIL =====
+        JButton btnDetail = new JButton("Xem chi tiết");
+        btnDetail.setBackground(new Color(255, 87, 34));
+        btnDetail.setForeground(Color.WHITE);
+        btnDetail.setFocusPainted(false);
 
-        btnBuy.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this,
-                    "Đã thêm " + sp.getTensp() + " vào giỏ hàng!");
+        btnDetail.addActionListener(e -> {
+            new ProductDetailFrame(sp, user);
         });
 
         infoPanel.add(lblName);
@@ -148,7 +161,7 @@ public class SanPhamKhachHang extends JPanel {
         infoPanel.add(Box.createVerticalStrut(5));
         infoPanel.add(lblStock);
         infoPanel.add(Box.createVerticalStrut(10));
-        infoPanel.add(btnBuy);
+        infoPanel.add(btnDetail);
 
         card.add(infoPanel, BorderLayout.CENTER);
 

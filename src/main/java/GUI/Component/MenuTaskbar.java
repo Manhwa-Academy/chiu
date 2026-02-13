@@ -181,12 +181,19 @@ public class MenuTaskbar extends JPanel {
                 pnlCenter.add(listitem[i]);
                 if (i != 0) {
 
-                    // Nếu là khách hàng và là mục "sanpham" thì luôn hiển thị
-                    if (user != null
-                            && user.getManhomquyen() == 4
-                            && getSt[i][2].equals("sanpham")) {
+                    if (user != null && user.getManhomquyen() == 4) {
 
-                        listitem[i].setVisible(true);
+                        // Khách hàng: chỉ cho xem sản phẩm
+                        if (getSt[i][2].equals("sanpham")) {
+                            listitem[i].setVisible(true);
+                        }
+                        // Ẩn khu vực kho và nhà cung cấp
+                        else if (getSt[i][2].equals("khuvuckho")
+                                || getSt[i][2].equals("nhacungcap")) {
+                            listitem[i].setVisible(false);
+                        } else {
+                            listitem[i].setVisible(false);
+                        }
 
                     } else if (!checkRole(getSt[i][2])) {
 

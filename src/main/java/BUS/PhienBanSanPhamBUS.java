@@ -38,6 +38,17 @@ public class PhienBanSanPhamBUS {
         return -1;
     }
 
+    public PhienBanSanPhamDTO getPhienBanDauTien(int masp) {
+        ArrayList<PhienBanSanPhamDTO> list = getAll(masp);
+        if (list == null || list.isEmpty())
+            return null;
+        return list.get(0);
+    }
+
+    public int getGiaByMaPhienBan(int mapb) {
+        return pbDAO.getGiaByMaPhienBan(mapb);
+    }
+
     /* ================= CHECK TRÙNG PHIÊN BẢN ================= */
 
     public boolean checkDuplicate(
@@ -64,6 +75,9 @@ public class PhienBanSanPhamBUS {
         return success;
     }
 
+    public boolean updateSoLuongTon(int maphienbansp, int soLuongThayDoi) {
+        return new PhienBanSanPhamDAO().updateSoLuongTon(maphienbansp, soLuongThayDoi);
+    }
     /* ================= LẤY SỐ LƯỢNG ================= */
 
     public int getSoluong(int maphienban) {
@@ -73,7 +87,4 @@ public class PhienBanSanPhamBUS {
 
     /* ================= CẬP NHẬT TỒN ================= */
 
-    public boolean updateSoLuong(int maphienban, int soluong) {
-        return pbDAO.updateSoLuongTon(maphienban, soluong) > 0;
-    }
 }

@@ -128,6 +128,18 @@ public class ChiTietSanPhamBUS {
         return result;
     }
 
+    public ArrayList<ChiTietSanPhamDTO> getImeiByPhienBan(int mapb, int soLuong) {
+
+        ArrayList<ChiTietSanPhamDTO> all = ctspDAO.selectbyPb(mapb);
+        ArrayList<ChiTietSanPhamDTO> result = new ArrayList<>();
+
+        for (int i = 0; i < soLuong && i < all.size(); i++) {
+            result.add(all.get(i));
+        }
+
+        return result;
+    }
+
     public ArrayList<ChiTietSanPhamDTO> FilterPBvaAll(
             String text,
             int masp,

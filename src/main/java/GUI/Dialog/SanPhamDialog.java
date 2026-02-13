@@ -101,6 +101,7 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
     private InputForm txtChatLieu;
     private InputForm txtGiaNhap;
     private InputForm txtGiaBan;
+    private InputForm txtMoTa;
 
     // ===== Image =====
     private InputImage inputHinhAnh;
@@ -161,6 +162,7 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
 
         txtTyLe = new InputForm("Tỷ lệ mô hình");
         txtChatLieu = new InputForm("Chất liệu");
+        txtMoTa = new InputForm("Mô tả sản phẩm");
 
         cbxLoaiMoHinh = new SelectForm("Loại sản phẩm", dsLoaiMoHinh);
         cbxXuatXu = new SelectForm("Xuất xứ", dsXuatXu);
@@ -236,7 +238,8 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         pnCenter = new JPanel(new BorderLayout());
 
         // ===== Panel thông tin =====
-        pnThongTinMoHinh = new JPanel(new GridLayout(3, 4, 10, 10));
+        pnThongTinMoHinh = new JPanel(new GridLayout(4, 4, 10, 10));
+
         pnThongTinMoHinh.setBackground(Color.WHITE);
         pnCenter.add(pnThongTinMoHinh, BorderLayout.CENTER);
 
@@ -270,6 +273,7 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
 
         pnThongTinMoHinh.add(txtTyLe);
         pnThongTinMoHinh.add(txtChatLieu);
+        pnThongTinMoHinh.add(txtMoTa); // 👈 thêm ở đây
         pnThongTinMoHinh.add(cbxSeries);
         pnThongTinMoHinh.add(cbxThuongHieu);
         pnThongTinMoHinh.add(cbxXuatXu);
@@ -788,6 +792,7 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
 
         String hinhAnh = inputHinhAnh.getUrl_img();
         String tenMoHinh = txtTenMoHinh.getText();
+        String moTa = txtMoTa.getText(); // 👈 THÊM DÒNG NÀY
 
         int maXuatXu = xuatXuBus.getAll()
                 .get(cbxXuatXu.getSelectedIndex())
@@ -825,6 +830,7 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
                 maXuatXu,
                 maKhuVucKho,
                 loaiMoHinh,
+                moTa, // 👈 THÊM Ở ĐÂY
                 0,
                 1,
                 ngayTao);
@@ -866,6 +872,8 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
 
         txtTyLe.setText(sp.getTyle());
         txtChatLieu.setText(sp.getChatlieu());
+        txtMoTa.setText(sp.getMota()); // 👈 THÊM DÒNG NÀY
+
     }
 
     public PhienBanSanPhamDTO getCauHinh() {

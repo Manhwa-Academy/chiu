@@ -1,44 +1,50 @@
 package GUI.Panel;
 
+
 import DTO.SanPhamDTO;
+import DTO.TaiKhoanDTO;
+
+import BUS.GioHangBUS;
 import BUS.PhienBanSanPhamBUS;
-import BUS.SanPhamBUS;
+import BUS.ThuongHieuBUS;
 
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
-import BUS.ThuongHieuBUS;
 
 public class ProductDetailFrame extends JFrame {
 
-    private SanPhamBUS spBUS = new SanPhamBUS();
+    private final PhienBanSanPhamBUS pbBUS = new PhienBanSanPhamBUS();
+    GioHangBUS ghBUS = new GioHangBUS();
 
-    public ProductDetailFrame(SanPhamDTO sp) {
+    public ProductDetailFrame(SanPhamDTO sp, TaiKhoanDTO user) {
 
         setTitle("Chi tiết sản phẩm");
-        setSize(1000, 650);
+        setSize(1000, 680);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setResizable(false);
 
-        setLayout(new BorderLayout());
         getContentPane().setBackground(Color.WHITE);
+        setLayout(new BorderLayout());
 
+        // ===== WRAPPER =====
+        JPanel wrapper = new JPanel(new BorderLayout());
+        wrapper.setBackground(Color.WHITE);
+        // ===== MAIN PANEL =====
         JPanel mainPanel = new JPanel(new BorderLayout(40, 0));
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(40, 50, 40, 50));
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(40, 40, 20, 40));
         mainPanel.setBackground(Color.WHITE);
-
         // ===== IMAGE =====
         JLabel lblImage = new JLabel();
-        lblImage.setHorizontalAlignment(JLabel.CENTER);
-
+        lblImage.setHorizontalAlignment(JLabel.LEFT);
         try {
             String resourcePath = "img/products/" + sp.getHinhanh().trim();
             URL url = getClass().getClassLoader().getResource(resourcePath);
 
             if (url != null) {
                 ImageIcon icon = new ImageIcon(url);
-                Image img = icon.getImage().getScaledInstance(450, 450, Image.SCALE_SMOOTH);
+                Image img = icon.getImage().getScaledInstance(430, 430, Image.SCALE_SMOOTH);
                 lblImage.setIcon(new ImageIcon(img));
             }
         } catch (Exception ignored) {
@@ -46,86 +52,117 @@ public class ProductDetailFrame extends JFrame {
 
         mainPanel.add(lblImage, BorderLayout.WEST);
 
-        // ===== RIGHT PANEL =====
-        JPanel rightPanel = new JPanel();
-        rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
+        // ===== RIGHT CONTENT =====
+        JPanel rightPanel = new JPanel(new BorderLayout());
         rightPanel.setBackground(Color.WHITE);
+        JPanel content = new JPanel();
+        content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
+        content.setBackground(Color.WHITE);
+        content.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
 
         JLabel lblName = new JLabel(sp.getTensp());
-        lblName.setFont(new Font("Segoe UI", Font.BOLD, 28));
+        lblName.setFont(new Font("Segoe UI", Font.BOLD, 26));
+        lblName.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         ThuongHieuBUS thBUS = new ThuongHieuBUS();
         String tenThuongHieu = thBUS.getTenThuongHieu(sp.getThuonghieu());
 
         JLabel lblBrand = new JLabel("Thương hiệu: " + tenThuongHieu);
+        lblBrand.setAlignmentX(Component.LEFT_ALIGNMENT);
         JLabel lblLoai = new JLabel("Loại sản phẩm: " + sp.getLoaiSanPham());
+        lblLoai.setAlignmentX(Component.LEFT_ALIGNMENT);
         JLabel lblSeries = new JLabel("Series: " + sp.getSeries());
+        lblSeries.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        // ===== GIÁ =====
-        PhienBanSanPhamBUS pbBUS = new PhienBanSanPhamBUS();
         int gia = pbBUS.getGiaThapNhatByMaSP(sp.getMasp());
-
-        JLabel lblPrice = new JLabel("Giá: " + String.format("%,d ₫", gia));
+        JLabel lblPrice = new JLabel(String.format("%,d ₫", gia));
         lblPrice.setFont(new Font("Segoe UI", Font.BOLD, 32));
         lblPrice.setForeground(new Color(255, 66, 78));
+        lblPrice.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JLabel lblStock = new JLabel("Còn " + sp.getSoluongton() + " sản phẩm");
         lblStock.setForeground(new Color(0, 150, 0));
-
-        // ===== QUANTITY =====
+        lblStock.setAlignmentX(Component.LEFT_ALIGNMENT);
+        // ===== SỐ LƯỢNG =====
         SpinnerNumberModel model = new SpinnerNumberModel(1, 1, sp.getSoluongton(), 1);
         JSpinner spinner = new JSpinner(model);
         spinner.setPreferredSize(new Dimension(80, 35));
 
-        JPanel qtyPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel qtyPanel = new JPanel();
+        qtyPanel.setLayout(new BoxLayout(qtyPanel, BoxLayout.X_AXIS));
         qtyPanel.setBackground(Color.WHITE);
+        qtyPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        qtyPanel.setMaximumSize(new Dimension(150, 40)); // 👈 THÊM DÒNG NÀY
+
         qtyPanel.add(new JLabel("Số lượng: "));
+        qtyPanel.add(Box.createHorizontalStrut(10));
         qtyPanel.add(spinner);
 
-        // ===== BUTTON =====
-        JButton btnBuy = new JButton("THANH TOÁN");
-        btnBuy.setBackground(new Color(255, 0, 0));
-        btnBuy.setForeground(Color.WHITE);
-        btnBuy.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        btnBuy.setFocusPainted(false);
-        btnBuy.setPreferredSize(new Dimension(400, 55));
+        // ===== BUTTON ADD TO CART =====
+        JButton btnAdd = new JButton("THÊM VÀO GIỎ");
+        btnAdd.setBackground(new Color(255, 87, 34));
+        btnAdd.setForeground(Color.WHITE);
+        btnAdd.setFont(new Font("Segoe UI", Font.BOLD, 17));
+        btnAdd.setPreferredSize(new Dimension(260, 45));
+        btnAdd.setMaximumSize(new Dimension(260, 45));
+        btnAdd.setFocusPainted(false);
 
-        btnBuy.addActionListener(e -> {
+        btnAdd.addActionListener(e -> {
 
             int soLuong = (int) spinner.getValue();
 
-            if (soLuong > sp.getSoluongton()) {
-                JOptionPane.showMessageDialog(this, "Không đủ hàng!");
-                return;
-            }
+            int mapb = pbBUS.getPhienBanDauTien(sp.getMasp())
+                    .getMaphienbansp();
 
-            boolean success = spBUS.updateSoLuongTon(sp.getMasp(), -soLuong);
+            ghBUS.addOrUpdate(user.getManv(), mapb, soLuong);
 
-            if (success) {
-                JOptionPane.showMessageDialog(this, "Thanh toán thành công!");
-                dispose();
-            } else {
-                JOptionPane.showMessageDialog(this, "Lỗi cập nhật kho!");
-            }
+            JOptionPane.showMessageDialog(this, "Đã thêm vào giỏ hàng!");
         });
 
-        rightPanel.add(lblName);
-        rightPanel.add(Box.createVerticalStrut(15));
-        rightPanel.add(lblBrand);
-        rightPanel.add(lblLoai);
-        rightPanel.add(lblSeries);
-        rightPanel.add(Box.createVerticalStrut(25));
-        rightPanel.add(lblPrice);
-        rightPanel.add(Box.createVerticalStrut(10));
-        rightPanel.add(lblStock);
-        rightPanel.add(Box.createVerticalStrut(25));
-        rightPanel.add(qtyPanel);
-        rightPanel.add(Box.createVerticalStrut(30));
-        rightPanel.add(btnBuy);
+        // ===== ADD CONTENT =====
+        content.add(lblName);
+        content.add(Box.createVerticalStrut(12));
+        content.add(lblBrand);
+        content.add(lblLoai);
+        content.add(lblSeries);
+        content.add(Box.createVerticalStrut(20));
+        content.add(lblPrice);
+        content.add(Box.createVerticalStrut(10));
+        content.add(lblStock);
+        content.add(Box.createVerticalStrut(20));
+        content.add(qtyPanel);
+        content.add(Box.createVerticalStrut(25));
+        content.add(btnAdd);
 
-        mainPanel.add(rightPanel, BorderLayout.CENTER);
+        mainPanel.add(content, BorderLayout.CENTER);
 
-        add(mainPanel);
+        // ================= DESCRIPTION =================
+        JPanel descPanel = new JPanel(new BorderLayout());
+        descPanel.setBackground(Color.WHITE);
+        descPanel.setBorder(BorderFactory.createEmptyBorder(20, 40, 40, 40));
+
+        JLabel lblTitleDesc = new JLabel("MÔ TẢ SẢN PHẨM");
+        lblTitleDesc.setFont(new Font("Segoe UI", Font.BOLD, 18));
+
+        JTextArea txtDesc = new JTextArea(
+                sp.getMota() == null ? "Chưa có mô tả." : sp.getMota());
+        txtDesc.setLineWrap(true);
+        txtDesc.setWrapStyleWord(true);
+        txtDesc.setEditable(false);
+        txtDesc.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        txtDesc.setBackground(Color.WHITE);
+        txtDesc.setBorder(null);
+
+        JScrollPane scrollDesc = new JScrollPane(txtDesc);
+        scrollDesc.setBorder(null);
+
+        descPanel.add(lblTitleDesc, BorderLayout.NORTH);
+        descPanel.add(scrollDesc, BorderLayout.CENTER);
+
+        wrapper.add(mainPanel, BorderLayout.CENTER);
+        wrapper.add(descPanel, BorderLayout.SOUTH);
+
+        add(wrapper);
         setVisible(true);
     }
 }

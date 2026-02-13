@@ -149,33 +149,28 @@ public class PhienBanSanPhamDAO {
         return result;
     }
 
-    public int updateSoLuongTon(int maphienban, int soluong) {
-        PhienBanSanPhamDTO pb = selectById(maphienban);
+    public boolean updateSoLuongTon(int maphienbansp, int soLuongThayDoi) {
 
-        // Kiểm tra nếu pb là null
-        if (pb == null) {
-            System.out.println("Không tìm thấy phiên bản sản phẩm với mã: " + maphienban);
-            return 0; // Hoặc trả về giá trị khác để báo lỗi
-        }
-
-        int newQty = pb.getSoluongton() + soluong;
-
-        int result = 0;
         try {
             Connection con = JDBCUtil.getConnection();
-            String sql = "UPDATE phienbansanpham SET soluongton=? WHERE maphienbansp=?";
-            PreparedStatement pst = con.prepareStatement(sql);
-            pst.setInt(1, newQty);
-            pst.setInt(2, maphienban);
-            result = pst.executeUpdate();
-            JDBCUtil.closeConnection(con);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
-        // Cập nhật tồn tổng sản phẩm
-        SanPhamDAO.getInstance().updateSoLuongTon(pb.getMasp(), soluong);
-        return result;
+            String sql = "UPDATE phienbansanpham " +
+                    "SET soluongton = soluongton + ? " +
+                    "WHERE maphienbansp = ?";
+
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setInt(1, soLuongThayDoi);
+            pst.setInt(2, maphienbansp);
+
+            int result = pst.executeUpdate();
+
+            JDBCUtil.closeConnection(con);
+            return result > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public int getMinPriceByMaSP(int masp) {
@@ -205,6 +200,34 @@ public class PhienBanSanPhamDAO {
         }
 
         return result;
+    }
+
+    public int getGiaByMaPhienBan(int mapb) {
+
+        int gia = 0;
+
+        try {
+            Connection con = JDBCUtil.getConnection();
+
+            String sql = "SELECT giaxuat FROM phienbansanpham WHERE maphienbansp = ?";
+
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setInt(1, mapb);
+
+            ResultSet rs = pst.executeQuery();
+
+            if (rs.next()) {
+                gia = rs.getInt("giaxuat");
+
+            }
+
+            JDBCUtil.closeConnection(con);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return gia;
     }
 
     /* ================= DELETE ================= */

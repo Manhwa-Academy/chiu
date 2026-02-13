@@ -67,7 +67,6 @@ import GUI.Component.InputForm;
 import GUI.Component.NumericDocumentFilter;
 import GUI.Component.PanelBorderRadius;
 import GUI.Component.SelectForm;
-import GUI.Dialog.QRCode_Dialog;
 import helper.Formater;
 import helper.Validation;
 
@@ -107,6 +106,8 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
     int maphieunhap;
     int rowPhieuSelect = -1;
     private ButtonCustom scanImei, importImei;
+    private ArrayList<String> imeiAutoList = new ArrayList<>();
+    private int imeiIndex = 0;
 
     public TaoPhieuNhap(NhanVienDTO nv, String type, Main m) {
         this.nvDto = nv;
@@ -459,6 +460,8 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
         ch = phienbanBus.getAll(sp.getMasp());
         cbxCauhinh.setArr(getCauHinhPhienBan(sp.getMasp()));
         this.txtDongia.setText(Integer.toString(ch.get(0).getGianhap()));
+        imeiAutoList.clear();
+        imeiIndex = 0;
     }
 
     public ChiTietPhieuNhapDTO getInfoChiTietPhieu() {
@@ -706,12 +709,40 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
         } else if (source == btnNhapHang) {
             eventBtnNhapHang();
         } else if (source == scanImei) {
-            if (ch.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Vui lòng chọn sản phẩm để quét mã!");
-            } else {
-                new QRCode_Dialog(owner, "Scan", true, textAreaImei);
+
+            if (Validation.isEmpty(txtMaSp.getText())) {
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn sản phẩm!");
+                return;
             }
-        } else if (source == importImei) {
+
+            if (imeiAutoList.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Chưa có IMEI để quét!");
+                return;
+            }
+
+            if (imeiIndex >= imeiAutoList.size()) {
+                JOptionPane.showMessageDialog(this, "Đã quét hết IMEI!");
+                return;
+            }
+
+            String imei = imeiAutoList.get(imeiIndex);
+
+            // Check trùng
+            String[] current = textAreaImei.getText().split("\n");
+            for (String s : current) {
+                if (s.trim().equals(imei)) {
+                    imeiIndex++;
+                    return;
+                }
+            }
+
+            textAreaImei.append(imei + "\n");
+            imeiIndex++;
+        }
+
+        else if (source == importImei)
+
+        {
             getImeifromFile();
             for (String i : listmaimei) {
                 textAreaImei.append(i + "\n");

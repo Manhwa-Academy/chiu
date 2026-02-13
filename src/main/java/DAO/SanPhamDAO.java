@@ -28,8 +28,8 @@ public class SanPhamDAO implements DAOinterface<SanPhamDTO> {
             String sql = """
                         INSERT INTO sanpham
                         (masp, tensp, hinhanh, thuonghieu, series, nhanvat, tyle, chatlieu,
-                         xuatxu, khuvuckho, loaisanpham, soluongton, trangthai, ngaytao)
-                        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                         xuatxu, khuvuckho, loaisanpham, mota, soluongton, trangthai, ngaytao)
+                        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
                     """;
 
             PreparedStatement pst = con.prepareStatement(sql);
@@ -44,10 +44,13 @@ public class SanPhamDAO implements DAOinterface<SanPhamDTO> {
             pst.setString(8, t.getChatlieu());
             pst.setInt(9, t.getXuatxu());
             pst.setInt(10, t.getKhuvuckho());
-            pst.setString(11, t.getLoaiSanPham()); // 👈 THÊM DÒNG NÀY
-            pst.setInt(12, t.getSoluongton());
-            pst.setInt(13, t.getTrangthai());
-            pst.setString(14, t.getNgaytao());
+            pst.setString(11, t.getLoaiSanPham() == null ? "" : t.getLoaiSanPham());
+
+            pst.setString(12, t.getMota() == null ? "" : t.getMota()); // 👈 THÊM
+
+            pst.setInt(13, t.getSoluongton());
+            pst.setInt(14, t.getTrangthai());
+            pst.setString(15, t.getNgaytao());
 
             result = pst.executeUpdate();
 
@@ -79,6 +82,7 @@ public class SanPhamDAO implements DAOinterface<SanPhamDTO> {
                         xuatxu = ?,
                         khuvuckho = ?,
                         loaisanpham = ?,
+                        mota = ?,              -- 👈 THÊM DÒNG NÀY
                         trangthai = ?,
                         ngaytao = ?
                     WHERE masp = ?
@@ -98,12 +102,13 @@ public class SanPhamDAO implements DAOinterface<SanPhamDTO> {
             pst.setInt(9, t.getXuatxu());
             pst.setInt(10, t.getKhuvuckho());
 
-            // ⚠️ tránh null
             pst.setString(11, t.getLoaiSanPham() == null ? "" : t.getLoaiSanPham());
 
-            pst.setInt(12, t.getTrangthai());
-            pst.setString(13, t.getNgaytao());
-            pst.setInt(14, t.getMasp());
+            pst.setString(12, t.getMota() == null ? "" : t.getMota()); // 👈 THÊM
+
+            pst.setInt(13, t.getTrangthai());
+            pst.setString(14, t.getNgaytao());
+            pst.setInt(15, t.getMasp());
 
             result = pst.executeUpdate();
 
@@ -179,10 +184,10 @@ public class SanPhamDAO implements DAOinterface<SanPhamDTO> {
                         rs.getInt("xuatxu"),
                         rs.getInt("khuvuckho"),
                         rs.getString("loaisanpham"),
+                        rs.getString("mota"), // 👈 THÊM DÒNG NÀY
                         rs.getInt("soluongton"),
                         rs.getInt("trangthai"),
-                        rs.getString("ngaytao") // Thêm ngày tạo
-                );
+                        rs.getString("ngaytao"));
 
                 list.add(sp);
             }
@@ -217,6 +222,7 @@ public class SanPhamDAO implements DAOinterface<SanPhamDTO> {
                         rs.getInt("xuatxu"),
                         rs.getInt("khuvuckho"),
                         rs.getString("loaisanpham"),
+                        rs.getString("mota"), // 👈 THÊM
                         rs.getInt("soluongton"),
                         rs.getInt("trangthai"),
                         rs.getString("ngaytao"));
@@ -260,6 +266,7 @@ public class SanPhamDAO implements DAOinterface<SanPhamDTO> {
                         rs.getInt("xuatxu"),
                         rs.getInt("khuvuckho"),
                         rs.getString("loaisanpham"),
+                        rs.getString("mota"), // 👈 THÊM
                         rs.getInt("soluongton"),
                         rs.getInt("trangthai"),
                         rs.getString("ngaytao"));

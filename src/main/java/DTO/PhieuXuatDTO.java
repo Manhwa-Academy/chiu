@@ -1,17 +1,18 @@
-
 package DTO;
 
 import java.sql.Timestamp;
 
+public class PhieuXuatDTO extends PhieuDTO {
 
-public class PhieuXuatDTO extends PhieuDTO{
     private int makh;
 
     public PhieuXuatDTO(int makh) {
         this.makh = makh;
     }
 
-    public PhieuXuatDTO(int makh, int maphieu, int manguoitao, Timestamp thoigiantao, long tongTien, int trangthai) {
+    public PhieuXuatDTO(int makh, int maphieu, int manguoitao,
+                        Timestamp thoigiantao, long tongTien, int trangthai) {
+
         super(maphieu, manguoitao, thoigiantao, tongTien, trangthai);
         this.makh = makh;
     }
@@ -33,16 +34,9 @@ public class PhieuXuatDTO extends PhieuDTO{
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final PhieuXuatDTO other = (PhieuXuatDTO) obj;
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        PhieuXuatDTO other = (PhieuXuatDTO) obj;
         return this.makh == other.makh;
     }
 
@@ -50,6 +44,4 @@ public class PhieuXuatDTO extends PhieuDTO{
     public String toString() {
         return "PhieuXuatDTO{" + "makh=" + makh + '}';
     }
-
-    
 }

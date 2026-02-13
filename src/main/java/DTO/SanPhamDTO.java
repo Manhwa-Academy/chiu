@@ -18,14 +18,29 @@ public class SanPhamDTO {
     private int soluongton;
     private int trangthai;
     private String ngaytao; // Thêm trường ngaytao
+    private String mota;
 
     public SanPhamDTO() {
     }
 
     // Constructor có tham số ngày tạo
-    public SanPhamDTO(int masp, String tensp, String hinhanh, int thuonghieu, String series, String nhanvat,
-            String tyle, String chatlieu, int xuatxu, int khuvuckho, String loaiSanPham, int slton, int trangthai,
+    public SanPhamDTO(
+            int masp,
+            String tensp,
+            String hinhanh,
+            int thuonghieu,
+            String series,
+            String nhanvat,
+            String tyle,
+            String chatlieu,
+            int xuatxu,
+            int khuvuckho,
+            String loaisanpham,
+            String mota, // 👈 BẮT BUỘC PHẢI CÓ
+            int soluongton,
+            int trangthai,
             String ngaytao) {
+
         this.masp = masp;
         this.tensp = tensp;
         this.hinhanh = hinhanh;
@@ -36,10 +51,11 @@ public class SanPhamDTO {
         this.chatlieu = chatlieu;
         this.xuatxu = xuatxu;
         this.khuvuckho = khuvuckho;
-        this.loaiSanPham = loaiSanPham;
-        this.soluongton = slton;
+        this.loaiSanPham = loaisanpham;
+        this.mota = mota; // 👈 GÁN
+        this.soluongton = soluongton;
         this.trangthai = trangthai;
-        this.ngaytao = ngaytao; // Khởi tạo ngaytao
+        this.ngaytao = ngaytao;
     }
 
     // ===== GETTER / SETTER =====
@@ -82,6 +98,14 @@ public class SanPhamDTO {
 
     public void setSeries(String series) {
         this.series = series;
+    }
+
+    public String getMota() {
+        return mota;
+    }
+
+    public void setMota(String mota) {
+        this.mota = mota;
     }
 
     // Getter và Setter cho ngaytao
